@@ -29,7 +29,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="image-container">
-                                    <img src="@product.ImageUrl" class="card-img-top rounded"/>
+                                    <img src="@product.imageUrl" class="card-img-top rounded"/>
                                 </div>
                             </div>
                             <div class="col-md-9">
@@ -47,21 +47,29 @@
                                     </div>
                                     <div class="col-md-9">
                                         <div class="pl-1">
-                                            <p class="card-title h5 text-dark opacity-100 text-uppercase">@product.productTitle</p>
-                                            <p class="text-dark opacity-75">by <b>@product.Company</b></p>
-                                            <p class="text-dark opacity-75">From <b>@product.productStartDate</b></p>
-                                            <p class="text-dark opacity-75">To <b>@product.productEndDate</b></p>
+                                            <p class="card-title h5 text-dark opacity-100 text-uppercase" style="font-size: 50px; margin-bottom: 30px;">
+                                                <strong>@product.productTitle</strong>
+                                            </p>
                                             <p class="text-dark opacity-75">At <b>@product.productLocation</b></p>
-                                            <p class="text-dark opacity-75">Max Participants <b>@product.MaxUsers</b></p>
                                         </div>
                                         <div class="pl-1">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <p class="card-title h5 text-dark opacity-100 text-uppercase">Price: <span>@product.DisplayPrice.ToString("c")</span></p>
+                                                    <p class="card-title h5 text-dark opacity-100 text-uppercase">Price: <span>@product.displayPrice.ToString("c")</span></p>
+                                                    <p class="text-dark opacity-75">Max Plus Ones Allowed <b>@product.plusOnesAllowed</b></p>
+                                                    
+                                                    @{
+                                                        DateTimeOffset productDate = product.productDateAdded;
+                                                        DateTimeOffset currentDate = DateTime.Now;
+                                                        TimeSpan timeSinceAdded = currentDate - productDate;
+                                                        int daysAgo = (int)timeSinceAdded.TotalDays;
+                                                    }
+                                                    <p class="text-dark opacity-75">Added <b>@daysAgo</b> days ago</p>
+
+                                                    <p class="text-dark opacity-75">Added <b>@product.productDescription</b></p>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

@@ -116,8 +116,9 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
             public string? Region { get; set; }
             public string? Gender { get; set; }
             public DateTimeOffset? userDateJoined { get; set; }
-            public int? CompanyId { get; set; }
-            public Company? Company { get; set; }
+            
+            [Required]
+            public string PhoneNumber { get; set; }
         }
 
 
@@ -127,7 +128,6 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
             {
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Company)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
             }
 
@@ -154,14 +154,15 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                user.Name = Input.Name;
-                user.StreetAddress = Input.StreetAddress;
-                user.City = Input.City;
-                user.Region = Input.Region;
-                user.Gender = Input.Gender;
+                user.name = Input.Name;
+                user.streetAddress = Input.StreetAddress;
+                user.city = Input.City;
+                user.region = Input.Region;
+                user.gender = Input.Gender;
                 user.userDateJoined = DateTimeOffset.Now;
-                user.Role = Input.Role;
-                
+                user.role = Input.Role;
+                user.PhoneNumber = Input.PhoneNumber;
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

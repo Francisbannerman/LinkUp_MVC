@@ -29,4 +29,11 @@
       <Folder Include="wwwroot\images\product" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Company\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Company\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Company\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Company\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

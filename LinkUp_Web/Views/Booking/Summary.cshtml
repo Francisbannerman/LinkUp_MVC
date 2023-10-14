@@ -31,8 +31,8 @@
 									<label>Name</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="BookingHeader.Name" class="form-control" />
-									<span asp-validation-for="BookingHeader.Name" class="text-danger"></span>
+									<input asp-for="BookingHeader.name" class="form-control" />
+									<span asp-validation-for="BookingHeader.name" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -40,8 +40,8 @@
 									<label>Phone</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="BookingHeader.PhoneNumber" class="form-control" />
-									<span asp-validation-for="BookingHeader.PhoneNumber" class="text-danger"></span>
+									<input asp-for="BookingHeader.phoneNumber" class="form-control" />
+									<span asp-validation-for="BookingHeader.phoneNumber" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -49,8 +49,8 @@
 									<label>Street Address</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="BookingHeader.StreetAddress" class="form-control" />
-									<span asp-validation-for="BookingHeader.StreetAddress" class="text-danger"></span>
+									<input asp-for="BookingHeader.streetAddress" class="form-control" />
+									<span asp-validation-for="BookingHeader.streetAddress" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -58,26 +58,17 @@
 									<label>City</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="BookingHeader.City" class="form-control" />
-									<span asp-validation-for="BookingHeader.City" class="text-danger"></span>
+									<input asp-for="BookingHeader.city" class="form-control" />
+									<span asp-validation-for="BookingHeader.city" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
 								<div class="col-3">
-									<label>State</label>
+									<label>Region</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="BookingHeader.Region" class="form-control" />
-									<span asp-validation-for="BookingHeader.Region" class="text-danger"></span>
-								</div>
-							</div>
-							<div class="row my-1">
-								<div class="col-3">
-									<label>Postal Code</label>
-								</div>
-								<div class="col-9">
-									<input asp-for="BookingHeader.PostalCode" class="form-control" />
-									<span asp-validation-for="BookingHeader.PostalCode" class="text-danger"></span>
+									<input asp-for="BookingHeader.region" class="form-control" />
+									<span asp-validation-for="BookingHeader.region" class="text-danger"></span>
 								</div>
 							</div>
 						</div>
@@ -89,17 +80,17 @@
 								@foreach(var details in Model.BookingList){
 								<li class="list-group-item d-flex justify-content-between">
 									<div>
-										<h6 class="my-0">@details.Product.productTitle</h6>
-										<small class="text-muted">Quantity: @details.Count</small>
+										<h6 class="my-0">@details.product.productTitle</h6>
+										<small class="text-muted">Quantity: @details.plusOne</small>
 									</div>
-									<span class="text-muted">@((details.Price*details.Count).ToString("c"))</span>
+									<span class="text-muted">@((details.price*details.plusOne).ToString("c"))</span>
 								</li>
 								}
 
 
 								<li class="list-group-item d-flex justify-content-between bg-light">
 									<small class="text-info">Total (USD)</small>
-									<strong class="text-info">@Model.BookingHeader.OrderTotal.ToString("c")</strong>
+									<strong class="text-info">@Model.BookingHeader.orderTotal.ToString("c")</strong>
 								</li>
 							</ul>
 						</div>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "BrOepKzBWfWmdATR6nxWKQ8sMYjXwjuuX4LEfdLYdfg=",
+  "Hash": "vSO5ZBCp/gQl1vDudVxNGP4f+W3JCK66oi3//dmiyvs=",
   "Source": "LinkUp_Web",
   "BasePath": "_content/LinkUp_Web",
   "Mode": "Default",
@@ -1122,6 +1122,23 @@
       "OriginalItemSpec": "wwwroot/images/.DS_Store"
     },
     {
+      "Identity": "/Users/macbookpro/RiderProjects/LinkUp_MVC/LinkUp_Web/wwwroot/images/product/18ef60d9-671d-4f9f-98b0-4f22b0f3676b.png",
+      "SourceId": "LinkUp_Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/macbookpro/RiderProjects/LinkUp_MVC/LinkUp_Web/wwwroot/",
+      "BasePath": "_content/LinkUp_Web",
+      "RelativePath": "images/product/18ef60d9-671d-4f9f-98b0-4f22b0f3676b.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/images/product/18ef60d9-671d-4f9f-98b0-4f22b0f3676b.png"
+    },
+    {
       "Identity": "/Users/macbookpro/RiderProjects/LinkUp_MVC/LinkUp_Web/wwwroot/images/product/e0490c0f-3e8f-4908-8290-4fd41c3ffcfc.jpeg",
       "SourceId": "LinkUp_Web",
       "SourceType": "Discovered",
@@ -1139,12 +1156,12 @@
       "OriginalItemSpec": "wwwroot/images/product/e0490c0f-3e8f-4908-8290-4fd41c3ffcfc.jpeg"
     },
     {
-      "Identity": "/Users/macbookpro/RiderProjects/LinkUp_MVC/LinkUp_Web/wwwroot/js/Bookings.js",
+      "Identity": "/Users/macbookpro/RiderProjects/LinkUp_MVC/LinkUp_Web/wwwroot/images/product/ec2cd4fe-dda7-4e2a-b3b2-b146ba750cee.png",
       "SourceId": "LinkUp_Web",
       "SourceType": "Discovered",
       "ContentRoot": "/Users/macbookpro/RiderProjects/LinkUp_MVC/LinkUp_Web/wwwroot/",
       "BasePath": "_content/LinkUp_Web",
-      "RelativePath": "js/Bookings.js",
+      "RelativePath": "images/product/ec2cd4fe-dda7-4e2a-b3b2-b146ba750cee.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1153,7 +1170,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/js/Bookings.js"
+      "OriginalItemSpec": "wwwroot/images/product/ec2cd4fe-dda7-4e2a-b3b2-b146ba750cee.png"
     },
     {
       "Identity": "/Users/macbookpro/RiderProjects/LinkUp_MVC/LinkUp_Web/wwwroot/js/site.js",

@@ -13,15 +13,15 @@ public class BookingDetail
 
     [ForeignKey("BookingHeaderId")]
     [ValidateNever]
-    public BookingHeader BookingHeader { get; set; }
+    public BookingHeader bookingHeader { get; set; }
 
     [Required]
-    public Guid ProductId { get; set; }
+    public Guid productId { get; set; }
 
-    [ForeignKey("ProductId")]
+    [ForeignKey("productId")]
     [ValidateNever]
-    public Product Product { get; set; }
+    public Product product { get; set; }
 
-    public int Count { get; set; }
-    public double Price { get; set; }
+    public int plusOnes { get; set; }
+    public double price { get; set; }
 }

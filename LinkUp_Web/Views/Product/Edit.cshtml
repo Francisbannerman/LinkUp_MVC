@@ -11,11 +11,10 @@
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
             <input asp-for="Product.productId" hidden />            
-            <input asp-for="Product.ImageUrl" hidden />
+            <input asp-for="Product.imageUrl" hidden />
             <div class="row">
                 <div class="col-10">
                     <div class="border p-3">
-                        @*<div asp-validation-summary="All"></div>*@
                         <div class="form-floating py-2 col-12">
                             <input asp-for="Product.productTitle" class="form-control border-0 shadow">
                             <label asp-for="Product.productTitle" class="ms-2"></label>
@@ -37,30 +36,20 @@
                             <span asp-validation-for="Product.supplierPrice" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="Product.DisplayPrice" class="form-control border-0 shadow">
-                            <label asp-for="Product.DisplayPrice" class="ms-2"></label>
-                            <span asp-validation-for="Product.DisplayPrice" class="text-danger"></span>
+                            <input asp-for="Product.displayPrice" class="form-control border-0 shadow">
+                            <label asp-for="Product.displayPrice" class="ms-2"></label>
+                            <span asp-validation-for="Product.displayPrice" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
-                            <select asp-for="@Model.Product.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
+                            <select asp-for="@Model.Product.categoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
                                 <option disabled selected>--Select Category--</option>
                             </select>
-                            <label asp-for="Product.CategoryId" class="ms-2"></label>
-                            <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                            <label asp-for="Product.categoryId" class="ms-2"></label>
+                            <span asp-validation-for="Product.categoryId" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
                             <input type="file" name="file" class="form-control border-0 shadow">
-                            <label asp-for="Product.ImageUrl" class="ms-2"></label>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input type="date" asp-for="Product.productStartDate" class="form-control border-0 shadow">
-                            <label asp-for="Product.productStartDate" class="ms-2"></label>
-                            <span asp-validation-for="Product.productStartDate" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input type="date" asp-for="Product.productEndDate" class="form-control border-0 shadow">
-                            <label asp-for="Product.productEndDate" class="ms-2"></label>
-                            <span asp-validation-for="Product.productEndDate" class="text-danger"></span>
+                            <label asp-for="Product.imageUrl" class="ms-2"></label>
                         </div>
                         <div class="form-floating py-2 col-12">
                             <input asp-for="Product.productLocation" class="form-control border-0 shadow">
@@ -68,16 +57,10 @@
                             <span asp-validation-for="Product.productLocation" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="Product.MinUsers" class="form-control border-0 shadow">
-                            <label asp-for="Product.MinUsers" class="ms-2"></label>
-                            <span asp-validation-for="Product.MinUsers" class="text-danger"></span>
+                            <input asp-for="Product.plusOnesAllowed" class="form-control border-0 shadow">
+                            <label asp-for="Product.plusOnesAllowed" class="ms-2"></label>
+                            <span asp-validation-for="Product.plusOnesAllowed" class="text-danger"></span>
                         </div>
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Product.MaxUsers" class="form-control border-0 shadow">
-                            <label asp-for="Product.MaxUsers" class="ms-2"></label>
-                            <span asp-validation-for="Product.MaxUsers" class="text-danger"></span>
-                        </div>
-
                         <div class="row pt-2">
                             <div class="col-6 col-md-3">
                                 @if (Model.Product.productId != Guid.Empty)
@@ -98,7 +81,7 @@
                     </div>
                 </div>
                 <div class="col-2">
-                    <img src="@Model.Product.ImageUrl" width="100%" 
+                    <img src="@Model.Product.imageUrl" width="100%" 
                         style="border-radius:5px; border:1px solid #bbb9b9" />
                 </div>
             </div>

@@ -22,10 +22,10 @@ public class BookingHeaderRepository: Repository<BookingHeader>, IBookingHeaderR
         var orderFromDb = _db.BookingHeaders.FirstOrDefault(u => u.Id == id);
         if (orderFromDb != null)
         {
-            orderFromDb.OrderStatus = orderStatus;
+            orderFromDb.orderStatus = orderStatus;
             if (!string.IsNullOrEmpty(paymentStatus))
             {
-                orderFromDb.PaymentStatus = paymentStatus;
+                orderFromDb.paymentStatus = paymentStatus;
             }
         }
     }
@@ -35,12 +35,12 @@ public class BookingHeaderRepository: Repository<BookingHeader>, IBookingHeaderR
         var orderFromDb = _db.BookingHeaders.FirstOrDefault(u => u.Id == id);
         if (!string.IsNullOrEmpty(sessionId))
         {
-            orderFromDb.SessionId = sessionId;
+            orderFromDb.sessionId = sessionId;
         }
         if (!string.IsNullOrEmpty(paymentIntentId))
         {
-            orderFromDb.PaymentIntentId = paymentIntentId;
-            orderFromDb.PaymentDate = DateTime.UtcNow;
+            orderFromDb.paymentIntentId = paymentIntentId;
+            orderFromDb.paymentDate = DateTime.UtcNow;
         }
     }
 }

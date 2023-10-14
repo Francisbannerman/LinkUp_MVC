@@ -13,8 +13,8 @@ namespace LinkUp_Web.Repository
         {
             _db = db;
             dbSet = _db.Set<T>();
-            _db.Products.Include(u => u.Category)
-                .Include(u => u.CategoryId);
+            _db.Products.Include(u => u.category)
+                .Include(u => u.categoryId);
         }
 
         public void Add(T entity)

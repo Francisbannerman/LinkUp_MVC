@@ -29,14 +29,14 @@ public class BookingController : Controller
 
         BookingVM = new()
         {
-            BookingList = _unitOfWork.Booking.GetAll(u => u.ApplicationUserId == userId,
-                includeProperties: "Product"),
+            BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
+                includeProperties: "product"),
             BookingHeader = new()
         };
         foreach (var booking in BookingVM.BookingList)
         {
-            booking.Price = GetPriceBasedOnPlusOnes(booking);
-            BookingVM.BookingHeader.OrderTotal += booking.Price;
+            booking.price = GetPriceBasedOnPlusOnes(booking);
+            BookingVM.BookingHeader.orderTotal += booking.price;
         }
 
         return View(BookingVM);
@@ -44,24 +44,23 @@ public class BookingController : Controller
 
     private double GetPriceBasedOnPlusOnes(Booking booking)
     {
-        if (booking.Count == 0)
+        if (booking.plusOne == 0)
         {
-            return booking.Product.DisplayPrice;
+            return booking.product.displayPrice;
         }
         else
         {
-            double temp1 = booking.Count * 0.5;
-            double temp2 = booking.Product.DisplayPrice * temp1;
-            double finalPrice = booking.Product.DisplayPrice + temp2;
-            booking.Product.DisplayPrice = finalPrice;
-            return booking.Product.DisplayPrice;
+            double temp1 = booking.plusOne * 0.5;
+            double temp2 = booking.product.displayPrice * temp1;
+            double finalPrice = booking.product.displayPrice + temp2;
+            return finalPrice;
         }
     }
 
     public IActionResult Plus(Guid bookingId)
     {
         var bookingFromDb = _unitOfWork.Booking.Get(u => u.ProductId == bookingId);
-        bookingFromDb.Count = bookingFromDb.Count + 1;
+        bookingFromDb.plusOne = bookingFromDb.plusOne + 1;
         _unitOfWork.Booking.Update(bookingFromDb);
         _unitOfWork.Save();
         return RedirectToAction(nameof(Index));
@@ -70,13 +69,13 @@ public class BookingController : Controller
     public IActionResult Minus(Guid bookingId)
     {
         var bookingFromDb = _unitOfWork.Booking.Get(u => u.ProductId == bookingId);
-        if (bookingFromDb.Count <= 0)
+        if (bookingFromDb.plusOne <= 0)
         {
             _unitOfWork.Booking.Remove(bookingFromDb);
         }
         else
         {
-            bookingFromDb.Count -= 1;
+            bookingFromDb.plusOne -= 1;
             _unitOfWork.Booking.Update(bookingFromDb);
         }
 
@@ -99,22 +98,22 @@ public class BookingController : Controller
 
         BookingVM = new()
         {
-            BookingList = _unitOfWork.Booking.GetAll(u => u.ApplicationUserId == userId,
-                includeProperties: "Product"),
+            BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
+                includeProperties: "product"),
             BookingHeader = new()
         };
 
-        BookingVM.BookingHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-        BookingVM.BookingHeader.Name = BookingVM.BookingHeader.ApplicationUser.Name;
-        BookingVM.BookingHeader.PhoneNumber = BookingVM.BookingHeader.ApplicationUser.PhoneNumber;
-        BookingVM.BookingHeader.StreetAddress = BookingVM.BookingHeader.ApplicationUser.StreetAddress;
-        BookingVM.BookingHeader.City = BookingVM.BookingHeader.ApplicationUser.City;
-        BookingVM.BookingHeader.Region = BookingVM.BookingHeader.ApplicationUser.Region;
+        BookingVM.BookingHeader.applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+        BookingVM.BookingHeader.name = BookingVM.BookingHeader.applicationUser.name;
+        BookingVM.BookingHeader.phoneNumber = BookingVM.BookingHeader.applicationUser.PhoneNumber;
+        BookingVM.BookingHeader.streetAddress = BookingVM.BookingHeader.applicationUser.streetAddress;
+        BookingVM.BookingHeader.city = BookingVM.BookingHeader.applicationUser.city;
+        BookingVM.BookingHeader.region = BookingVM.BookingHeader.applicationUser.region;
 
         foreach (var booking in BookingVM.BookingList)
         {
-            booking.Price = GetPriceBasedOnPlusOnes(booking);
-            BookingVM.BookingHeader.OrderTotal += booking.Price;
+            booking.price = GetPriceBasedOnPlusOnes(booking);
+            BookingVM.BookingHeader.orderTotal += booking.price;
         }
 
         return View(BookingVM);
@@ -127,30 +126,21 @@ public class BookingController : Controller
          var claimsIdentity = (ClaimsIdentity)User.Identity;
          var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
     
-         BookingVM.BookingList = _unitOfWork.Booking.GetAll(u => u.ApplicationUserId == userId,
-             includeProperties: "Product");
+         BookingVM.BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
+             includeProperties: "product");
     
-         BookingVM.BookingHeader.DateBooked = System.DateTime.UtcNow;
-         BookingVM.BookingHeader.ApplicationUserId = userId;
+         BookingVM.BookingHeader.dateBooked = System.DateTime.UtcNow;
+         BookingVM.BookingHeader.applicationUserId = userId;
          ApplicationUser applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
     
          foreach (var booking in BookingVM.BookingList)
          {
-             booking.Price = GetPriceBasedOnPlusOnes(booking);
-             BookingVM.BookingHeader.OrderTotal += booking.Price;
+             booking.price = GetPriceBasedOnPlusOnes(booking);
+             BookingVM.BookingHeader.orderTotal += booking.price;
          }
-    
-         if (applicationUser.CompanyId.GetValueOrDefault() == 0)
-         {
-             BookingVM.BookingHeader.PaymentStatus = SD.PaymentStatusPending;
-             BookingVM.BookingHeader.OrderStatus = SD.StatusPending;
-         }
-         else
-         {
-             //delayed  payment implementation.
-             BookingVM.BookingHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
-             BookingVM.BookingHeader.OrderStatus = SD.StatusApproved;
-         }
+         
+         BookingVM.BookingHeader.paymentStatus = SD.PaymentStatusPending;
+         BookingVM.BookingHeader.orderStatus = SD.StatusPending;
          _unitOfWork.BookingHeader.Add(BookingVM.BookingHeader);
          _unitOfWork.Save();
     
@@ -158,77 +148,69 @@ public class BookingController : Controller
          {
              BookingDetail bookingDetail = new()
              {
-                 ProductId = cart.ProductId,
+                 productId = cart.ProductId,
                  BookingHeaderId = BookingVM.BookingHeader.Id,
-                 Price = cart.Price,
-                 Count = cart.Count
+                 price = cart.price,
+                 plusOnes = cart.plusOne
              };
              _unitOfWork.BookingDetail.Add(bookingDetail);
              _unitOfWork.Save();
          }
          
-         if (applicationUser.CompanyId.GetValueOrDefault() == 0)
+         //payment logic
+         var domain = "https://localhost:7010/";
+         var options = new SessionCreateOptions
          {
-             //payment logic
-             var domain = "https://localhost:7010/";
-             var options = new SessionCreateOptions
+             SuccessUrl = domain+ $"Booking/OrderConfirmation?id={BookingVM.BookingHeader.Id}",
+             CancelUrl = domain+"Booking/index",
+             LineItems = new List<SessionLineItemOptions>(),
+             Mode = "payment",
+         };
+
+         foreach (var item in BookingVM.BookingList)
+         {
+             var sessionLineItem = new SessionLineItemOptions
              {
-                 SuccessUrl = domain+ $"Booking/OrderConfirmation?id={BookingVM.BookingHeader.Id}",
-                 CancelUrl = domain+"Booking/index",
-                 LineItems = new List<SessionLineItemOptions>(),
-                 Mode = "payment",
-             };
-             
-             foreach (var item in BookingVM.BookingList)
-             {
-                 var sessionLineItem = new SessionLineItemOptions
+                 PriceData = new SessionLineItemPriceDataOptions
                  {
-                     PriceData = new SessionLineItemPriceDataOptions
+                     UnitAmount = (long)(item.price * 100),
+                     Currency = "usd",
+                     ProductData = new SessionLineItemPriceDataProductDataOptions
                      {
-                         UnitAmount = (long)(item.Price * 100),
-                         Currency = "usd",
-                         ProductData = new SessionLineItemPriceDataProductDataOptions
-                         {
-                             Name = item.Product.productTitle
-                         }
-                     },
-                     Quantity = item.Count
-                 };
-                 options.LineItems.Add(sessionLineItem);
-             }
-             
-             var service = new SessionService();
-             Session session = service.Create(options);
-             _unitOfWork.BookingHeader.UpdateStripePaymentID(BookingVM.BookingHeader.Id, session.Id, session.PaymentIntentId);
-             _unitOfWork.Save();
-    
-             Response.Headers.Add("Location", session.Url);
-             return new StatusCodeResult(303);
+                         Name = item.product.productTitle
+                     }
+                 },
+                 Quantity = item.plusOne
+             };
+             options.LineItems.Add(sessionLineItem);
          }
-         return RedirectToAction(nameof(OrderConfirmation), new { id = BookingVM.BookingHeader.Id });
+             
+         var service = new SessionService();
+         Session session = service.Create(options);
+         _unitOfWork.BookingHeader.UpdateStripePaymentID(BookingVM.BookingHeader.Id, session.Id, session.PaymentIntentId);
+         _unitOfWork.Save();
+    
+         Response.Headers.Add("Location", session.Url);
+         return new StatusCodeResult(303);
      }
     
     public IActionResult OrderConfirmation(int id)
     {
          BookingHeader bookingHeader =
-             _unitOfWork.BookingHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+             _unitOfWork.BookingHeader.Get(u => u.Id == id, includeProperties: "applicationUser");
         
-         if (bookingHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+         //an instant payment order
+         var service = new SessionService();
+         Session session = service.Get(bookingHeader.sessionId);
+        
+         if (session.PaymentStatus.ToLower() == "paid")
          {
-             //an instant payment order
-             var service = new SessionService();
-             Session session = service.Get(bookingHeader.SessionId);
-        
-             if (session.PaymentStatus.ToLower() == "paid")
-             {
-                 _unitOfWork.BookingHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
-                 _unitOfWork.BookingHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-                 _unitOfWork.Save();
-             }
+             _unitOfWork.BookingHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
+             _unitOfWork.BookingHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+             _unitOfWork.Save();
          }
-        
          List<Booking> bookings = _unitOfWork.Booking
-             .GetAll(u => u.ApplicationUserId == bookingHeader.ApplicationUserId).ToList();
+             .GetAll(u => u.applicationUserId == bookingHeader.applicationUserId).ToList();
         
          _unitOfWork.Booking.RemoveRange(bookings);
          _unitOfWork.Save();

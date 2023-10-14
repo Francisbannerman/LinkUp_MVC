@@ -6,14 +6,14 @@ namespace LinkUp_Web.Models;
 public class Category
 {
     [Key]
-    public int CategoryId { get; set; }
+    public int categoryId { get; set; }
 
     [Required]
     [MaxLength(30)]
     [DisplayName("Category Name")]
-    public string Name { get; set; }
+    public string name { get; set; }
 
     [DisplayName("Display Order")]
     [Range(1, 100, ErrorMessage = "There is an error in this field")]
-    public int? DisplayOrder { get; set; }
+    public int? displayOrder { get; set; }
 }

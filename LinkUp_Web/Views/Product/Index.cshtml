@@ -29,11 +29,8 @@
                         <th>Display Price</th>
                         <th>Supplier Price</th>
                         <th>Product Category</th>
-                        <th>Product Start Date</th>
-                        <th>Product End Date</th>
                         <th>Product Location</th>
-                        <th>Product Min Users</th>
-                        <th>Product Max Users</th>
+                        <th>Plus One's Allowed</th>
                         <th>Product Image</th>
                         <th>Actions</th>
                     </tr>
@@ -45,16 +42,13 @@
                             <td>@product.productDateAdded</td>
                             <td>@product.productTitle</td>
                             <td>@product.productHighlights</td>
-                            <td>@product.DisplayPrice</td>
+                            <td>@product.displayPrice</td>
                             <td>@product.supplierPrice</td>
-                            <td>@product.Category</td>
-                            <td>@product.productStartDate</td>
-                            <td>@product.productEndDate</td>
+                            <td>@product.category</td>
                             <td>@product.productLocation</td>
-                            <td>@product.MinUsers</td>
-                            <td>@product.MaxUsers</td>
+                            <td>@product.plusOnesAllowed</td>
                             <td>
-                                <img src="@product.ImageUrl" alt="Product Image" width="100">
+                                <img src="@product.imageUrl" alt="Product Image" width="100">
                             </td>
                             <td>
                                 <div class="btn-group" role="group">

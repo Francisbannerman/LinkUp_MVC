@@ -23,7 +23,7 @@ public class ProductController : Controller
     // GET
     public IActionResult Index()
     {
-        List<Product> categoryObjList = _unitOfWork.Product.GetAll(includeProperties:"Category").ToList();
+        List<Product> categoryObjList = _unitOfWork.Product.GetAll(includeProperties:"category").ToList();
         return View(categoryObjList);
     }
 
@@ -33,13 +33,8 @@ public class ProductController : Controller
         {
             CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
             {
-                Text = u.Name,
-                Value = u.CategoryId.ToString()
-            }),
-            CompanyList = _unitOfWork.Company.GetAll().Select(u => new SelectListItem
-            {
-                Text = u.Name,
-                Value = u.CompanyId.ToString()
+                Text = u.name,
+                Value = u.categoryId.ToString()
             }),
             Product = new Product()
         };
@@ -63,7 +58,7 @@ public class ProductController : Controller
             { 
                 file.CopyTo(fileStream);
             }
-            productVm.Product.ImageUrl = @"/images/product/" + fileName;
+            productVm.Product.imageUrl = @"/images/product/" + fileName;
             
             _unitOfWork.Product.Add(productVm.Product);
             
@@ -82,8 +77,8 @@ public class ProductController : Controller
         {
             CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
             {
-                Text = u.Name,
-                Value = u.CategoryId.ToString()
+                Text = u.name,
+                Value = u.categoryId.ToString()
             }),
             Product = new Product()
         };
@@ -95,8 +90,6 @@ public class ProductController : Controller
     [HttpPost]
     public IActionResult Edit(ProductVM productVm, IFormFile? file)
     {
-        productVm.Product.CompanyId = 1;
-        
         if (ModelState.IsValid)
         {
             string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -106,9 +99,9 @@ public class ProductController : Controller
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 string productPath = Path.Combine(wwwRootPath, @"images/product");
 
-                if (!string.IsNullOrEmpty(productVm.Product.ImageUrl))
+                if (!string.IsNullOrEmpty(productVm.Product.imageUrl))
                 {
-                    var oldImagePath = Path.Combine(wwwRootPath, productVm.Product.ImageUrl.TrimStart('/'));
+                    var oldImagePath = Path.Combine(wwwRootPath, productVm.Product.imageUrl.TrimStart('/'));
                 
                     if (System.IO.File.Exists(oldImagePath))
                     {
@@ -119,7 +112,7 @@ public class ProductController : Controller
                 {
                     file.CopyTo(fileStream);
                 }
-                productVm.Product.ImageUrl = @"/images/product/" + fileName;
+                productVm.Product.imageUrl = @"/images/product/" + fileName;
             }
             _unitOfWork.Product.Update(productVm.Product);
             
@@ -145,8 +138,8 @@ public class ProductController : Controller
         {
             CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
             {
-                Text = u.Name,
-                Value = u.CategoryId.ToString()
+                Text = u.name,
+                Value = u.categoryId.ToString()
             }),
             Product = new Product()
         };
@@ -164,7 +157,7 @@ public class ProductController : Controller
         {
             return Json(new { success = false, message = "Error while deleting" });
         }
-        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
+        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.imageUrl.TrimStart('\\'));
 
         if (System.IO.File.Exists(oldImagePath))
         {

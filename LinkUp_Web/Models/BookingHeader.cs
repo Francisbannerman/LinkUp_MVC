@@ -7,35 +7,33 @@ namespace LinkUp_Web.Models;
 public class BookingHeader
 {
     public int Id { get; set; }
-    public string ApplicationUserId { get; set; }
+    public string applicationUserId { get; set; }
     [ForeignKey("ApplicationUserId")]
     [ValidateNever]
-    public ApplicationUser ApplicationUser { get; set; }
+    public ApplicationUser applicationUser { get; set; }
 
-    public DateTime DateBooked { get; set; }
-    public DateTime BookingDateTime { get; set; }
-    public double OrderTotal { get; set; }
+    //date user made the booking
+    public DateTime dateBooked { get; set; }
+    //day user made booking for
+    public DateTime bookingDateTime { get; set; }
+    public double orderTotal { get; set; }
 
-    public string? OrderStatus { get; set; }
-    public string? PaymentStatus { get; set; }
-    public string? SeatTableNumber { get; set; }
-    public string? Attendee { get; set; }
+    public string? orderStatus { get; set; }
+    public string? paymentStatus { get; set; }
+    public string? seatTableNumber { get; set; }
+    public string? attendee { get; set; }
 
-    public DateTime PaymentDate { get; set; }
+    public DateTime paymentDate { get; set; }
 
-    public string? SessionId { get; set; }
-    public string? PaymentIntentId { get; set; }
+    public string? sessionId { get; set; }
+    public string? paymentIntentId { get; set; }
 
     [Required]
-    public string PhoneNumber { get; set; }
+    public string phoneNumber { get; set; }
+    public string? streetAddress { get; set; }
     [Required]
-    public string StreetAddress { get; set; }
-    [Required]
-    public string City { get; set; }
-    [Required]
-    public string Region { get; set; }
-    [Required]
-    public string PostalCode { get; set; }
-    [Required]
-    public string Name { get; set; }
+    public string? city { get; set; }
+    public string? region { get; set; }
+    public string? postalCode { get; set; }
+    public string? name { get; set; }
 }

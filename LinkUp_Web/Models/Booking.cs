@@ -12,17 +12,17 @@ public class Booking
     
     [ForeignKey("ProductId")]
     [ValidateNever]
-    public Product Product { get; set; }
+    public Product product { get; set; }
     
     [Range(1,1000,ErrorMessage = "Please pick a number between 1 and 99")]
-    public int Count { get; set; }
+    public int plusOne { get; set; }
     
-    public string ApplicationUserId { get; set; }
+    public string applicationUserId { get; set; }
     
     [ForeignKey("ApplicationUserId")]
     [ValidateNever]
-    public ApplicationUser ApplicationUser { get; set; }
+    public ApplicationUser applicationUser { get; set; }
     
     [NotMapped]
-    public double Price { get; set; }
+    public double price { get; set; }
 }

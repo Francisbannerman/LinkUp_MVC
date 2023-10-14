@@ -20,7 +20,8 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
+        //IEnumerable<Product> productList = _unitOfWork.Product.GetAll();
+        IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "category");
         return View(productList);
     }
 
@@ -28,8 +29,8 @@ public class HomeController : Controller
     {
         Booking book = new()
         {
-            Product = _unitOfWork.Product.Get(u => u.productId == productId, includeProperties: "Category"),
-            Count = 1,
+            product = _unitOfWork.Product.Get(u => u.productId == productId, includeProperties: "category"),
+            plusOne = 0,
             ProductId = productId
         };
         return View(book);
@@ -41,12 +42,12 @@ public class HomeController : Controller
     {
         var claimsIdentity = (ClaimsIdentity)User.Identity;
         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-        booking.ApplicationUserId = userId;
+        booking.applicationUserId = userId;
 
-        Booking bookingFromDb = _unitOfWork.Booking.Get(u => u.ApplicationUserId == userId && u.ProductId == booking.ProductId);
+        Booking bookingFromDb = _unitOfWork.Booking.Get(u => u.applicationUserId == userId && u.ProductId == booking.ProductId);
         if (bookingFromDb != null)
         {
-            bookingFromDb.Count += booking.Count;
+            bookingFromDb.plusOne += booking.plusOne;
             _unitOfWork.Booking.Update(bookingFromDb);
         }
         else

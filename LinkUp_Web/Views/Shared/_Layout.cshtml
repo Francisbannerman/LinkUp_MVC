@@ -38,16 +38,13 @@
                         </li>
                     @* } *@
                     
-                    @* @if (User.IsInRole(SD.Role_Admin)) *@
-                    @* { *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Company" asp-action="Index">Company</a>
-                        </li>
-                    @* } *@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Booking" asp-action="Index">
                             <i class="bi bi-cart"></i> &nbsp;Booked
                         </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="GratisPoint" asp-action="Index">Gratis Points</a>
                     </li>
                 </ul>
                 <partial name="_LoginPartial" />

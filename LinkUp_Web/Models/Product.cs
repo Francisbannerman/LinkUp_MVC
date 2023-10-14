@@ -23,32 +23,20 @@ public class Product
 
     [Required]
     [Range(1, 1000)]
-    public double DisplayPrice { get; set; }
+    public double displayPrice { get; set; }
 
-    public int CategoryId { get; set; }
+    public int categoryId { get; set; }
     
     [ForeignKey("CategoryId")]
     [ValidateNever]
-    public Category? Category { get; set; }
+    public Category? category { get; set; }
     
     [ValidateNever]
-    public string? ImageUrl { get; set; }
+    public string? imageUrl { get; set; }
     
     public DateTimeOffset productDateAdded { get; set; }
-    
-    public DateTimeOffset? productStartDate { get; set; }
-    
-    public DateTimeOffset? productEndDate { get; set; }
-    
-    public int? CompanyId { get; set; }
-    
-    [ForeignKey("CompanyId")]
-    [ValidateNever]
-    public Company? Company { get; set; }
-    
+
     public string productLocation { get; set; }
     
-    public int MinUsers { get; set; }
-    
-    public int MaxUsers { get; set; }
+    public int? plusOnesAllowed { get; set; }
 }

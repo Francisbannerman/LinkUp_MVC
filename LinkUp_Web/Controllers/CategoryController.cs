@@ -32,11 +32,11 @@ public class CategoryController : Controller
     [HttpPost]
     public IActionResult Create(Category obj)
     {
-        if (obj.Name == obj.DisplayOrder.ToString())
+        if (obj.name == obj.displayOrder.ToString())
         {
             ModelState.AddModelError("Name", "The Name Cannot Be The Same As The Display Order");
         }
-        if (obj.Name.Length < 2)
+        if (obj.name.Length < 2)
         {
             ModelState.AddModelError("Name","Category Name Can't Be Just 1 Letter");
         }
@@ -56,7 +56,7 @@ public class CategoryController : Controller
         {
             return NotFound();
         }
-        Category? categoryFromDb = _unitOfWork.Category.Get(u => u.CategoryId == id);
+        Category? categoryFromDb = _unitOfWork.Category.Get(u => u.categoryId == id);
         
         if (categoryFromDb == null)
         {
@@ -83,7 +83,7 @@ public class CategoryController : Controller
         {
             return NotFound();
         }
-        Category? categoryFromDb = _unitOfWork.Category.Get(u => u.CategoryId == id);
+        Category? categoryFromDb = _unitOfWork.Category.Get(u => u.categoryId == id);
 
         if (categoryFromDb == null)
         {
@@ -95,7 +95,7 @@ public class CategoryController : Controller
     [HttpPost, ActionName("Delete")]
     public IActionResult DeletePost(int? id)
     {
-        Category? obj = _unitOfWork.Category.Get(u => u.CategoryId == id);
+        Category? obj = _unitOfWork.Category.Get(u => u.categoryId == id);
 
         if (obj == null)
         {

@@ -4,10 +4,10 @@ public interface IUnitOfWork
 {
     IApplicationUserRepository ApplicationUser { get; }
     ICategoryRepository Category { get; }
-    ICompanyRepository Company { get; }
     IProductRepository Product { get; }
     IBookingRepository Booking { get; }
     IBookingDetailRepository BookingDetail { get; }
     IBookingHeaderRepository BookingHeader { get; }
+    IGratisPointRepository GratisPoint { get; }
     void Save();
 }

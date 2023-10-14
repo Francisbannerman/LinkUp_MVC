@@ -25,17 +25,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var product in Model.OrderBy(p => p.DateBooked))
+                    @foreach (var product in Model.OrderBy(p => p.dateBooked))
                     {
                         <tr>
-                            <td>@product.DateBooked</td>
+                            <td>@product.dateBooked</td>
                             @* <td>@product.productTitle</td> *@
-                            <td>@product.BookingDateTime</td>
-                            <td>@product.OrderTotal</td>
-                            <td>@product.OrderStatus</td>
-                            <td>@product.PaymentStatus</td>
+                            <td>@product.bookingDateTime</td>
+                            <td>@product.orderTotal</td>
+                            <td>@product.orderStatus</td>
+                            <td>@product.paymentStatus</td>
                             @* <td>@product.productEndDate</td> *@
-                            <td>@product.ApplicationUser</td>
+                            <td>@product.applicationUser</td>
                             @* <td>@product.productLocation</td> *@
                             
                             <td>
