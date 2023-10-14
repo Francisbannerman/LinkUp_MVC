@@ -1,0 +1,51 @@
+@model ApplicationUser
+
+<p>Your Gratis Points are 0</p>
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Category List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="" asp-action="" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Buy More Gratis Points
+                </a>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Gratis Points 
+                    </th>
+                    <th></th>
+                </tr>
+            <thead>
+            <tbody>
+                    <tr>
+                        <td>@DateTimeOffset.UtcNow</td>
+                        <td>@Model.gratisPoint</td>
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="" asp-action="" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil-square"></i> Go Back To Shopping 
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
