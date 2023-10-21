@@ -3,7 +3,7 @@ using LinkUp_Web.Repository.IRepository;
 
 namespace LinkUp_Web.Repository;
 
-public class GratisPointRepository : Repository<GratisPoint>, IGratisPointRepository
+public class GratisPointRepository : Repository<GratisPointPackages>, IGratisPointRepository
 {
     private readonly ApplicationDbContext _db;
 
@@ -12,8 +12,8 @@ public class GratisPointRepository : Repository<GratisPoint>, IGratisPointReposi
         _db = db;
     }
 
-    public void Update(GratisPoint obj)
+    public void Update(GratisPointPackages obj)
     {
-        _db.GratisPoints.Update(obj);
+        _db.GratisPointPackages.Update(obj);
     }
 }

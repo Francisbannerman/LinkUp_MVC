@@ -19,14 +19,10 @@ public class BookingHeader
     public double orderTotal { get; set; }
 
     public string? orderStatus { get; set; }
-    public string? paymentStatus { get; set; }
     public string? seatTableNumber { get; set; }
     public string? attendee { get; set; }
 
     public DateTime paymentDate { get; set; }
-
-    public string? sessionId { get; set; }
-    public string? paymentIntentId { get; set; }
 
     [Required]
     public string phoneNumber { get; set; }

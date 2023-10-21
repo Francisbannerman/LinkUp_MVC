@@ -16,31 +16,4 @@ public class BookingHeaderRepository: Repository<BookingHeader>, IBookingHeaderR
     {
         _db.BookingHeaders.Update(obj);
     }
-
-    public void UpdateStatus(int id, string orderStatus, string? paymentStatus = null)
-    {
-        var orderFromDb = _db.BookingHeaders.FirstOrDefault(u => u.Id == id);
-        if (orderFromDb != null)
-        {
-            orderFromDb.orderStatus = orderStatus;
-            if (!string.IsNullOrEmpty(paymentStatus))
-            {
-                orderFromDb.paymentStatus = paymentStatus;
-            }
-        }
-    }
-
-    public void UpdateStripePaymentID(int id, string sessionId, string paymentIntentId)
-    {
-        var orderFromDb = _db.BookingHeaders.FirstOrDefault(u => u.Id == id);
-        if (!string.IsNullOrEmpty(sessionId))
-        {
-            orderFromDb.sessionId = sessionId;
-        }
-        if (!string.IsNullOrEmpty(paymentIntentId))
-        {
-            orderFromDb.paymentIntentId = paymentIntentId;
-            orderFromDb.paymentDate = DateTime.UtcNow;
-        }
-    }
 }

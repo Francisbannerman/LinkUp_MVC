@@ -36,4 +36,11 @@
       <_ContentIncludedByDefault Remove="Views\Company\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Views\GratisPointPackages\Create.cshtml" />
+      <AdditionalFiles Include="Views\GratisPointPackages\Delete.cshtml" />
+      <AdditionalFiles Include="Views\GratisPointPackages\Edit.cshtml" />
+      <AdditionalFiles Include="Views\GratisPointPackages\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

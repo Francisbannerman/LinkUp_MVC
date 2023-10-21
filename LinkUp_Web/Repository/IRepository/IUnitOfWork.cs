@@ -8,6 +8,7 @@ public interface IUnitOfWork
     IBookingRepository Booking { get; }
     IBookingDetailRepository BookingDetail { get; }
     IBookingHeaderRepository BookingHeader { get; }
-    IGratisPointRepository GratisPoint { get; }
+    IGratisPointRepository GratisPointPackages { get; }
+    IGratisPurchaseRepository GratisPurchase { get; }
     void Save();
 }

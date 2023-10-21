@@ -17,7 +17,8 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<BookingDetail> BookingDetails { get; set; }
     public DbSet<BookingHeader> BookingHeaders { get; set; }
-    public DbSet<GratisPoint> GratisPoints { get; set; }
+    public DbSet<GratisPointPackages> GratisPointPackages { get; set; }
+    public DbSet<GratisPurchase> GratisPurchases { get; set; }
 
 
     public List<ApplicationUser> applicationUserList()

@@ -11,7 +11,8 @@ public class UnitOfWork : IUnitOfWork
     public IBookingRepository Booking { get; private set; }
     public IBookingHeaderRepository BookingHeader { get; private set; }
     public IBookingDetailRepository BookingDetail { get; private set; }
-    public IGratisPointRepository GratisPoint { get; private set; }
+    public IGratisPointRepository GratisPointPackages { get; private set; }
+    public IGratisPurchaseRepository GratisPurchase { get; private set; }
 
     public UnitOfWork(ApplicationDbContext db)
     {
@@ -22,7 +23,8 @@ public class UnitOfWork : IUnitOfWork
         Booking = new BookingRepository(_db);
         BookingHeader = new BookingHeaderRepository(_db);
         BookingDetail = new BookingDetailRepository(_db);
-        GratisPoint = new GratisPointRepository(_db);
+        GratisPointPackages = new GratisPointRepository(_db);
+        GratisPurchase = new GratisPurchaseRepository(_db);
     }
 
     public void Save()

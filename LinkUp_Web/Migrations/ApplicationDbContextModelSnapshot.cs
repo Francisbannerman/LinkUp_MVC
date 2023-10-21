@@ -121,12 +121,6 @@ namespace LinkUp_Web.Migrations
                     b.Property<DateTime>("paymentDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("paymentIntentId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("paymentStatus")
-                        .HasColumnType("text");
-
                     b.Property<string>("phoneNumber")
                         .IsRequired()
                         .HasColumnType("text");
@@ -138,9 +132,6 @@ namespace LinkUp_Web.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("seatTableNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("sessionId")
                         .HasColumnType("text");
 
                     b.Property<string>("streetAddress")
@@ -194,17 +185,64 @@ namespace LinkUp_Web.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LinkUp_Web.Models.GratisPoint", b =>
+            modelBuilder.Entity("LinkUp_Web.Models.GratisPointPackages", b =>
                 {
-                    b.Property<string>("applicationUserId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Points")
+                    b.Property<int>("gratisPointPackagesId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.HasKey("applicationUserId");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("gratisPointPackagesId"));
 
-                    b.ToTable("GratisPoints");
+                    b.Property<double>("AmountForGratisPoint")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("addedByWho")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("dateAdded")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("gratisPointQuantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("gratisPointPackagesId");
+
+                    b.ToTable("GratisPointPackages");
+                });
+
+            modelBuilder.Entity("LinkUp_Web.Models.GratisPurchase", b =>
+                {
+                    b.Property<int>("gratisPurchaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("gratisPurchaseId"));
+
+                    b.Property<double>("amountForGratisPoint")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("applicationUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("datePurchased")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("gratisPointQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("paymentIntentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("paymentStatus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sessionId")
+                        .HasColumnType("text");
+
+                    b.HasKey("gratisPurchaseId");
+
+                    b.ToTable("GratisPurchases");
                 });
 
             modelBuilder.Entity("LinkUp_Web.Models.Product", b =>
@@ -259,7 +297,7 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            productId = new Guid("d4b52926-e221-4457-88b5-ba1f0eb65810"),
+                            productId = new Guid("a0690beb-a2e4-43fd-8941-43d374771623"),
                             categoryId = 1,
                             displayPrice = 110.0,
                             imageUrl = "dkhdhdhjhvdjh",
@@ -272,7 +310,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("a39171a7-423e-45ae-8167-3db17cc68e67"),
+                            productId = new Guid("8323ca6a-f3cc-437f-8360-c93f9bbcc380"),
                             categoryId = 2,
                             displayPrice = 120.0,
                             imageUrl = "1dkhdhdhjhvdjh",
@@ -285,7 +323,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("127442fc-9540-4129-bc2a-769905c54298"),
+                            productId = new Guid("7b0dd560-cc9e-4c49-9b50-d7833e1324fd"),
                             categoryId = 3,
                             displayPrice = 130.0,
                             imageUrl = "2dkhdhdhjhvdjh",
@@ -539,13 +577,13 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fe058020-82a3-4310-9407-87136170135d",
+                            Id = "cf5d7ead-cb62-4b43-8d9b-de48e738e96c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "904ef363-98cb-4a60-9f69-7b3dc3caf82a",
+                            ConcurrencyStamp = "1c0fa60a-ad03-4791-8ad7-26bc006520ef",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c65af397-d317-49d6-aa6e-c008cccb7768",
+                            SecurityStamp = "9f264b72-f4cc-4b68-945f-3c3e7271423f",
                             TwoFactorEnabled = false,
                             city = "AdminCity",
                             gender = "Male",
@@ -557,13 +595,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "480605e2-bd63-4d7d-adc4-ee6c2e8eb557",
+                            Id = "683e4f2a-46ae-427c-a76b-ff76344394c7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "efd4ac29-329e-4b9e-93a8-f1cb3e37d64f",
+                            ConcurrencyStamp = "59ca5963-5592-412c-8a16-c69ce2452406",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "94422d97-85c5-4e7a-92b6-d48e28003362",
+                            SecurityStamp = "8a92886b-96e7-4e16-81a8-29903774dca5",
                             TwoFactorEnabled = false,
                             city = "Admin1City",
                             gender = "Male",
@@ -575,13 +613,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "e5cd6940-2c18-47a6-a358-c1e31f2e9d2a",
+                            Id = "e8c7abe1-81bc-4605-adfc-72c0f0d0d745",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c79c8903-04ab-45b9-86cc-57720af12d64",
+                            ConcurrencyStamp = "3c0e4dee-9230-421c-a515-6ee76f362b82",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4907b95c-0b65-43da-a948-dfa041c1bf14",
+                            SecurityStamp = "48496ecb-123d-497e-8b8b-4f3122f5d610",
                             TwoFactorEnabled = false,
                             city = "Admin2City",
                             gender = "Male",
@@ -634,17 +672,6 @@ namespace LinkUp_Web.Migrations
                     b.HasOne("LinkUp_Web.Models.ApplicationUser", "applicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId");
-
-                    b.Navigation("applicationUser");
-                });
-
-            modelBuilder.Entity("LinkUp_Web.Models.GratisPoint", b =>
-                {
-                    b.HasOne("LinkUp_Web.Models.ApplicationUser", "applicationUser")
-                        .WithMany()
-                        .HasForeignKey("applicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("applicationUser");
                 });
