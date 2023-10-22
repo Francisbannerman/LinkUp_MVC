@@ -43,6 +43,9 @@ namespace LinkUp_Web.Migrations
                     b.Property<int>("plusOne")
                         .HasColumnType("integer");
 
+                    b.Property<double>("price")
+                        .HasColumnType("double precision");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
@@ -297,7 +300,7 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            productId = new Guid("a0690beb-a2e4-43fd-8941-43d374771623"),
+                            productId = new Guid("8138a0a0-8896-4a34-aedf-0720835fa9b9"),
                             categoryId = 1,
                             displayPrice = 110.0,
                             imageUrl = "dkhdhdhjhvdjh",
@@ -310,7 +313,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("8323ca6a-f3cc-437f-8360-c93f9bbcc380"),
+                            productId = new Guid("46e80a85-8839-4933-8ac9-c461442be9aa"),
                             categoryId = 2,
                             displayPrice = 120.0,
                             imageUrl = "1dkhdhdhjhvdjh",
@@ -323,7 +326,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("7b0dd560-cc9e-4c49-9b50-d7833e1324fd"),
+                            productId = new Guid("82919801-6aca-4366-9c27-af1dec586423"),
                             categoryId = 3,
                             displayPrice = 130.0,
                             imageUrl = "2dkhdhdhjhvdjh",
@@ -577,13 +580,13 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cf5d7ead-cb62-4b43-8d9b-de48e738e96c",
+                            Id = "77209cdd-730f-42b5-a0e9-b11c87e93b1a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1c0fa60a-ad03-4791-8ad7-26bc006520ef",
+                            ConcurrencyStamp = "ffb1d13d-c726-4b5d-a8f9-7c27a02287a5",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9f264b72-f4cc-4b68-945f-3c3e7271423f",
+                            SecurityStamp = "46a28ea5-5b40-48d4-97d6-8d2e7a5ad910",
                             TwoFactorEnabled = false,
                             city = "AdminCity",
                             gender = "Male",
@@ -595,13 +598,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "683e4f2a-46ae-427c-a76b-ff76344394c7",
+                            Id = "c3a86495-6cea-4622-b049-ecd3c63e2023",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "59ca5963-5592-412c-8a16-c69ce2452406",
+                            ConcurrencyStamp = "6d4ca2e8-2377-478b-bdd1-26f1184abe93",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8a92886b-96e7-4e16-81a8-29903774dca5",
+                            SecurityStamp = "35a66c9e-f22f-4c4e-9d2a-2d9e335b8438",
                             TwoFactorEnabled = false,
                             city = "Admin1City",
                             gender = "Male",
@@ -613,13 +616,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "e8c7abe1-81bc-4605-adfc-72c0f0d0d745",
+                            Id = "e695c55a-e195-4dbf-a5a2-bf0ff291876d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3c0e4dee-9230-421c-a515-6ee76f362b82",
+                            ConcurrencyStamp = "9f4250c9-8f9a-4d54-8e9a-fc374d77abdc",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "48496ecb-123d-497e-8b8b-4f3122f5d610",
+                            SecurityStamp = "4ea88016-36cb-4061-afd3-d4eee5e95ea3",
                             TwoFactorEnabled = false,
                             city = "Admin2City",
                             gender = "Male",

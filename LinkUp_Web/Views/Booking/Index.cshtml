@@ -7,7 +7,7 @@
             <div class="row px-4">
                 <div class="col-6">
                     <h5 class="pt-2 text-white">
-                        Shopping Cart
+                        Bookings Cart
                     </h5>
                 </div>
             </div>
@@ -40,11 +40,11 @@
                             </div>
                             <div class="col-6 col-sm-4 col-lg-6 pt-2">
                                 <div class="w-75 btn-group" role="group">
-                                    <a asp-action="plus" asp-route-bookingId="@item.ProductId" class="btn btn-outline-primary bg-gradient py-2">
-                                        <i class="bi bi-plus-square"></i>
-                                    </a> &nbsp;
                                     <a asp-action="minus" asp-route-bookingId="@item.ProductId" class="btn btn-outline-primary bg-gradient py-2">
-                                        <i class="bi bi-dash-square"></i>
+                                        <span>&minus;</span>
+                                    </a> &nbsp;
+                                    <a asp-action="plus" asp-route-bookingId="@item.ProductId" class="btn btn-outline-primary bg-gradient py-2">
+                                        <span>&plus;</span>
                                     </a>
                                 </div>
 
@@ -74,8 +74,8 @@
             </div>
             <div class="row">
                 <div class="col-md-2 offset-md-5">
-                    @* <a asp-action="Summary" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a> *@
-                    <a asp-action="" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a>
+                    <a asp-action="Summary" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a>
+                    @* <a asp-action="" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a> *@
                 </div>
             </div>
         </div>

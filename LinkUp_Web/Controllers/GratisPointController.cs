@@ -14,7 +14,6 @@ namespace LinkUp_Web.Controllers;
 public class GratisPointController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
-    [BindProperty] public GratisPointVM GratisPointVm { get; set; }
 
     public GratisPointController(IUnitOfWork unitOfWork)
     {
@@ -63,7 +62,6 @@ public class GratisPointController : Controller
          else
          {
              gratisPurchaseId = _unitOfWork.GratisPurchase.Max(u => u.gratisPurchaseId) + 1;
-             //var newGratisPurchaseId = gratisPurchaseId + 1;
          }
 
          var gratisPurchase = new GratisPurchase
@@ -102,7 +100,7 @@ public class GratisPointController : Controller
              Quantity = 1
          };
          options.LineItems.Add(sessionLineItem);
-
+         
          var service = new SessionService();
          Session session = service.Create(options);
          _unitOfWork.GratisPurchase.UpdateStripePaymentID(gratisPurchaseId, session.Id, session.PaymentIntentId);
@@ -114,6 +112,9 @@ public class GratisPointController : Controller
     
     public IActionResult OrderConfirmation(int id)
     {
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        
         GratisPurchase gratisPurchase = _unitOfWork.GratisPurchase.Get(u => u.gratisPurchaseId == id);
         
          var service = new SessionService();
@@ -123,6 +124,8 @@ public class GratisPointController : Controller
          {
              _unitOfWork.GratisPurchase.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
              _unitOfWork.GratisPurchase.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+             _unitOfWork.ApplicationUser.UpdateGratisPoints(userId,gratisPurchase.gratisPointQuantity);
+             
              _unitOfWork.Save();
          }
          _unitOfWork.Save();

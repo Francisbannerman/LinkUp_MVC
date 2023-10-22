@@ -16,4 +16,12 @@ public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicati
     {
         _db.ApplicationUsers.Update(obj);
     }
+
+    public void UpdateGratisPoints(string userId, int newGratisPointsBought)
+    {
+        var users = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+
+        var currentGratisPoint = users.gratisPoint += newGratisPointsBought;
+        users.gratisPoint = currentGratisPoint;
+    }
 }

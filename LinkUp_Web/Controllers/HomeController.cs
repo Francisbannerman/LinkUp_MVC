@@ -44,7 +44,8 @@ public class HomeController : Controller
         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
         booking.applicationUserId = userId;
 
-        Booking bookingFromDb = _unitOfWork.Booking.Get(u => u.applicationUserId == userId && u.ProductId == booking.ProductId);
+        Booking bookingFromDb = _unitOfWork.Booking.
+            Get(u => u.applicationUserId == userId && u.ProductId == booking.ProductId);
         if (bookingFromDb != null)
         {
             bookingFromDb.plusOne += booking.plusOne;

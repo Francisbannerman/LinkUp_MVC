@@ -91,130 +91,127 @@ public class BookingController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // public IActionResult Summary()
-    // {
-    //     var claimsIdentity = (ClaimsIdentity)User.Identity;
-    //     var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-    //
-    //     BookingVM = new()
-    //     {
-    //         BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
-    //             includeProperties: "product"),
-    //         BookingHeader = new()
-    //     };
-    //
-    //     BookingVM.BookingHeader.applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-    //     BookingVM.BookingHeader.name = BookingVM.BookingHeader.applicationUser.name;
-    //     BookingVM.BookingHeader.phoneNumber = BookingVM.BookingHeader.applicationUser.PhoneNumber;
-    //     BookingVM.BookingHeader.streetAddress = BookingVM.BookingHeader.applicationUser.streetAddress;
-    //     BookingVM.BookingHeader.city = BookingVM.BookingHeader.applicationUser.city;
-    //     BookingVM.BookingHeader.region = BookingVM.BookingHeader.applicationUser.region;
-    //
-    //     foreach (var booking in BookingVM.BookingList)
-    //     {
-    //         booking.price = GetPriceBasedOnPlusOnes(booking);
-    //         BookingVM.BookingHeader.orderTotal += booking.price;
-    //     }
-    //
-    //     return View(BookingVM);
-    // }
-    //
+    public IActionResult Summary()
+    {
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+    
+        BookingVM = new()
+        {
+            BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
+                includeProperties: "product"),
+            BookingHeader = new()
+        };
+    
+        BookingVM.BookingHeader.applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+        BookingVM.BookingHeader.name = BookingVM.BookingHeader.applicationUser.name;
+        BookingVM.BookingHeader.phoneNumber = BookingVM.BookingHeader.applicationUser.PhoneNumber;
+        BookingVM.BookingHeader.streetAddress = BookingVM.BookingHeader.applicationUser.streetAddress;
+        BookingVM.BookingHeader.city = BookingVM.BookingHeader.applicationUser.city;
+        BookingVM.BookingHeader.region = BookingVM.BookingHeader.applicationUser.region;
+    
+        foreach (var booking in BookingVM.BookingList)
+        {
+            booking.price = GetPriceBasedOnPlusOnes(booking);
+            BookingVM.BookingHeader.orderTotal += booking.price;
+        }
+    
+        return View(BookingVM);
+    }
+    
     // [HttpPost]
     //  [ActionName("Summary")]
     //  public IActionResult SummaryPOST()
     //  {
     //      var claimsIdentity = (ClaimsIdentity)User.Identity;
     //      var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-    //
-    //      BookingVM.BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
-    //          includeProperties: "product");
-    //
-    //      BookingVM.BookingHeader.dateBooked = System.DateTime.UtcNow;
-    //      BookingVM.BookingHeader.applicationUserId = userId;
-    //      ApplicationUser applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-    //
-    //      foreach (var booking in BookingVM.BookingList)
+    //  
+    //      var usersCurrentGratisPointBalance = Convert.ToDouble(_unitOfWork.ApplicationUser.
+    //          Get(u => u.Id == userId).gratisPoint);
+    //  
+    //      var totalBookingPrice = BookingVM.BookingHeader.orderTotal;
+    //  
+    //      if (usersCurrentGratisPointBalance < totalBookingPrice)
     //      {
-    //          booking.price = GetPriceBasedOnPlusOnes(booking);
-    //          BookingVM.BookingHeader.orderTotal += booking.price;
+    //          return View();
     //      }
-    //      
-    //      BookingVM.BookingHeader.paymentStatus = SD.PaymentStatusPending;
-    //      BookingVM.BookingHeader.orderStatus = SD.StatusPending;
-    //      _unitOfWork.BookingHeader.Add(BookingVM.BookingHeader);
-    //      _unitOfWork.Save();
-    //
-    //      foreach (var cart in BookingVM.BookingList)
+    //      else
     //      {
-    //          BookingDetail bookingDetail = new()
-    //          {
-    //              productId = cart.ProductId,
-    //              BookingHeaderId = BookingVM.BookingHeader.Id,
-    //              price = cart.price,
-    //              plusOnes = cart.plusOne
-    //          };
-    //          _unitOfWork.BookingDetail.Add(bookingDetail);
-    //          _unitOfWork.Save();
+    //          usersCurrentGratisPointBalance -= totalBookingPrice;
+    //          _unitOfWork.ApplicationUser.UpdateGratisPoints(userId, Convert.ToInt32(usersCurrentGratisPointBalance));
     //      }
-    //      
-    //      //payment logic
-    //      var domain = "https://localhost:7010/";
-    //      var options = new SessionCreateOptions
-    //      {
-    //          SuccessUrl = domain+ $"Booking/OrderConfirmation?id={BookingVM.BookingHeader.Id}",
-    //          CancelUrl = domain+"Booking/index",
-    //          LineItems = new List<SessionLineItemOptions>(),
-    //          Mode = "payment",
-    //      };
-    //
-    //      foreach (var item in BookingVM.BookingList)
-    //      {
-    //          var sessionLineItem = new SessionLineItemOptions
-    //          {
-    //              PriceData = new SessionLineItemPriceDataOptions
-    //              {
-    //                  UnitAmount = (long)(item.price * 100),
-    //                  Currency = "usd",
-    //                  ProductData = new SessionLineItemPriceDataProductDataOptions
-    //                  {
-    //                      Name = item.product.productTitle
-    //                  }
-    //              },
-    //              Quantity = item.plusOne
-    //          };
-    //          options.LineItems.Add(sessionLineItem);
-    //      }
-    //          
-    //      var service = new SessionService();
-    //      Session session = service.Create(options);
-    //      _unitOfWork.BookingHeader.UpdateStripePaymentID(BookingVM.BookingHeader.Id, session.Id, session.PaymentIntentId);
-    //      _unitOfWork.Save();
-    //
-    //      Response.Headers.Add("Location", session.Url);
-    //      return new StatusCodeResult(303);
+    //      return RedirectToAction(nameof(OrderConfirmation));
     //  }
-    //
-    // public IActionResult OrderConfirmation(int id)
-    // {
-    //      BookingHeader bookingHeader =
-    //          _unitOfWork.BookingHeader.Get(u => u.Id == id, includeProperties: "applicationUser");
-    //     
-    //      //an instant payment order
-    //      var service = new SessionService();
-    //      Session session = service.Get(bookingHeader.sessionId);
-    //     
-    //      if (session.PaymentStatus.ToLower() == "paid")
-    //      {
-    //          _unitOfWork.BookingHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
-    //          _unitOfWork.BookingHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-    //          _unitOfWork.Save();
-    //      }
-    //      List<Booking> bookings = _unitOfWork.Booking
-    //          .GetAll(u => u.applicationUserId == bookingHeader.applicationUserId).ToList();
-    //     
-    //      _unitOfWork.Booking.RemoveRange(bookings);
-    //      _unitOfWork.Save();
-    //
-    //     return View(id);
-    // }
+    [HttpPost]
+    [ActionName("Summary")]
+    public IActionResult SummaryPOST()
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+
+            var usersCurrentGratisPointBalance = Convert.ToDouble(GetUserGratisPointBalance(userId));
+
+            var totalBookingPrice = BookingVM.BookingHeader.orderTotal;
+
+            if (usersCurrentGratisPointBalance < totalBookingPrice)
+            {
+                // Handle insufficient funds (e.g., display an error message)
+                return RedirectToAction(nameof(Index));
+            }
+
+            usersCurrentGratisPointBalance -= totalBookingPrice;
+
+            UpdateUserGratisPoints(userId, Convert.ToInt32(usersCurrentGratisPointBalance));
+
+            return RedirectToAction(nameof(OrderConfirmation));
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions or errors appropriately
+            // Log the exception for debugging
+            // Redirect to an error page or display an error message
+            return View("Error");
+        }
+    }
+
+    private string GetCurrentUserId()
+    {
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+    }
+    private decimal GetUserGratisPointBalance(string userId)
+    {
+        var user = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+        return Convert.ToDecimal(user.gratisPoint);
+    }
+    private void UpdateUserGratisPoints(string userId, int newPointBalance)
+    {
+        _unitOfWork.ApplicationUser.UpdateGratisPoints(userId, Convert.ToInt32(newPointBalance));
+    }
+
+    
+    public IActionResult OrderConfirmation(int id)
+    {
+         // BookingHeader bookingHeader =
+         //     _unitOfWork.BookingHeader.Get(u => u.Id == id, includeProperties: "applicationUser");
+         //
+         // //an instant payment order
+         // var service = new SessionService();
+         // Session session = service.Get(bookingHeader.sessionId);
+         //
+         // if (session.PaymentStatus.ToLower() == "paid")
+         // {
+         //     _unitOfWork.BookingHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
+         //     _unitOfWork.BookingHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+         //     _unitOfWork.Save();
+         // }
+         // List<Booking> bookings = _unitOfWork.Booking
+         //     .GetAll(u => u.applicationUserId == bookingHeader.applicationUserId).ToList();
+         //
+         // _unitOfWork.Booking.RemoveRange(bookings);
+         // _unitOfWork.Save();
+    
+        return View(id);
+    }
 }
