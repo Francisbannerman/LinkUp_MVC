@@ -3,6 +3,7 @@ using System;
 using LinkUp_Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LinkUp_Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231022165421_addGratisPointsPackagesAgn7")]
+    partial class addGratisPointsPackagesAgn7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +46,9 @@ namespace LinkUp_Web.Migrations
                     b.Property<int>("plusOne")
                         .HasColumnType("integer");
 
+                    b.Property<double>("price")
+                        .HasColumnType("double precision");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
@@ -50,6 +56,35 @@ namespace LinkUp_Web.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("LinkUp_Web.Models.BookingDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookingHeaderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("plusOnes")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("price")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("productId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingHeaderId");
+
+                    b.HasIndex("productId");
+
+                    b.ToTable("BookingDetails");
                 });
 
             modelBuilder.Entity("LinkUp_Web.Models.BookingHeader", b =>
@@ -74,6 +109,7 @@ namespace LinkUp_Web.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("city")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("dateBooked")
@@ -88,10 +124,11 @@ namespace LinkUp_Web.Migrations
                     b.Property<double>("orderTotal")
                         .HasColumnType("double precision");
 
-                    b.Property<DateTime?>("paymentDate")
+                    b.Property<DateTime>("paymentDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("phoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("postalCode")
@@ -266,7 +303,7 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            productId = new Guid("d26c6553-7d63-4c8f-9022-f75cb14d3c53"),
+                            productId = new Guid("8138a0a0-8896-4a34-aedf-0720835fa9b9"),
                             categoryId = 1,
                             displayPrice = 110.0,
                             imageUrl = "dkhdhdhjhvdjh",
@@ -279,7 +316,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("c94e39b0-1782-416a-b3e8-4323e288f076"),
+                            productId = new Guid("46e80a85-8839-4933-8ac9-c461442be9aa"),
                             categoryId = 2,
                             displayPrice = 120.0,
                             imageUrl = "1dkhdhdhjhvdjh",
@@ -292,7 +329,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("5c9fd3b4-7db6-4ad5-9e4b-fc93ab4b3c97"),
+                            productId = new Guid("82919801-6aca-4366-9c27-af1dec586423"),
                             categoryId = 3,
                             displayPrice = 130.0,
                             imageUrl = "2dkhdhdhjhvdjh",
@@ -546,13 +583,13 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c5ba4061-af21-4f47-bcd9-a829d389a839",
+                            Id = "77209cdd-730f-42b5-a0e9-b11c87e93b1a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d1b03149-42a9-4932-88e9-d5a918c09f24",
+                            ConcurrencyStamp = "ffb1d13d-c726-4b5d-a8f9-7c27a02287a5",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "47a84ccb-0c47-4765-96dd-1960c5fa1d40",
+                            SecurityStamp = "46a28ea5-5b40-48d4-97d6-8d2e7a5ad910",
                             TwoFactorEnabled = false,
                             city = "AdminCity",
                             gender = "Male",
@@ -564,13 +601,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "2aacd358-7944-4534-9f57-9d83c65d3563",
+                            Id = "c3a86495-6cea-4622-b049-ecd3c63e2023",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "25650002-8dfc-467d-9b86-8dc930bca7b0",
+                            ConcurrencyStamp = "6d4ca2e8-2377-478b-bdd1-26f1184abe93",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2fcca26e-b53f-4868-b955-65f022ba0465",
+                            SecurityStamp = "35a66c9e-f22f-4c4e-9d2a-2d9e335b8438",
                             TwoFactorEnabled = false,
                             city = "Admin1City",
                             gender = "Male",
@@ -582,13 +619,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "78400991-1163-4938-bb02-e1e35db7c6eb",
+                            Id = "e695c55a-e195-4dbf-a5a2-bf0ff291876d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7f94c3ef-32f9-40e4-9b5f-1addd8731e6a",
+                            ConcurrencyStamp = "9f4250c9-8f9a-4d54-8e9a-fc374d77abdc",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "451ea15a-c282-4591-8be2-1461a004d43d",
+                            SecurityStamp = "4ea88016-36cb-4061-afd3-d4eee5e95ea3",
                             TwoFactorEnabled = false,
                             city = "Admin2City",
                             gender = "Male",
@@ -613,6 +650,25 @@ namespace LinkUp_Web.Migrations
                         .IsRequired();
 
                     b.Navigation("applicationUser");
+
+                    b.Navigation("product");
+                });
+
+            modelBuilder.Entity("LinkUp_Web.Models.BookingDetail", b =>
+                {
+                    b.HasOne("LinkUp_Web.Models.BookingHeader", "bookingHeader")
+                        .WithMany()
+                        .HasForeignKey("BookingHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LinkUp_Web.Models.Product", "product")
+                        .WithMany()
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("bookingHeader");
 
                     b.Navigation("product");
                 });

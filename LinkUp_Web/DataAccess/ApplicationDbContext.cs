@@ -15,7 +15,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<BookingDetail> BookingDetails { get; set; }
+    //public DbSet<BookingDetail> BookingDetails { get; set; }
     public DbSet<BookingHeader> BookingHeaders { get; set; }
     public DbSet<GratisPointPackages> GratisPointPackages { get; set; }
     public DbSet<GratisPurchase> GratisPurchases { get; set; }

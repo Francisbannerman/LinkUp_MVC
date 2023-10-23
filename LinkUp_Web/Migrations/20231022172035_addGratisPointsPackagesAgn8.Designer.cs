@@ -3,6 +3,7 @@ using System;
 using LinkUp_Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LinkUp_Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231022172035_addGratisPointsPackagesAgn8")]
+    partial class addGratisPointsPackagesAgn8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +77,7 @@ namespace LinkUp_Web.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("city")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("dateBooked")
@@ -88,10 +92,11 @@ namespace LinkUp_Web.Migrations
                     b.Property<double>("orderTotal")
                         .HasColumnType("double precision");
 
-                    b.Property<DateTime?>("paymentDate")
+                    b.Property<DateTime>("paymentDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("phoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("postalCode")
@@ -266,7 +271,7 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            productId = new Guid("d26c6553-7d63-4c8f-9022-f75cb14d3c53"),
+                            productId = new Guid("dcd2ec32-0564-4b43-b46b-6caf4ce8adae"),
                             categoryId = 1,
                             displayPrice = 110.0,
                             imageUrl = "dkhdhdhjhvdjh",
@@ -279,7 +284,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("c94e39b0-1782-416a-b3e8-4323e288f076"),
+                            productId = new Guid("fab4c514-fc25-47a2-8670-2f65b0c7a232"),
                             categoryId = 2,
                             displayPrice = 120.0,
                             imageUrl = "1dkhdhdhjhvdjh",
@@ -292,7 +297,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("5c9fd3b4-7db6-4ad5-9e4b-fc93ab4b3c97"),
+                            productId = new Guid("6500b232-b2f8-45a8-977b-6a5d106ed6ed"),
                             categoryId = 3,
                             displayPrice = 130.0,
                             imageUrl = "2dkhdhdhjhvdjh",
@@ -546,13 +551,13 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c5ba4061-af21-4f47-bcd9-a829d389a839",
+                            Id = "9142d25d-fbd9-4ae7-979f-39100d642eb5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d1b03149-42a9-4932-88e9-d5a918c09f24",
+                            ConcurrencyStamp = "ec36563f-401e-4dfa-85e1-fbf5223dcaa3",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "47a84ccb-0c47-4765-96dd-1960c5fa1d40",
+                            SecurityStamp = "c1ab8a75-1204-49ed-8a4e-ad25fe3c6fb5",
                             TwoFactorEnabled = false,
                             city = "AdminCity",
                             gender = "Male",
@@ -564,13 +569,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "2aacd358-7944-4534-9f57-9d83c65d3563",
+                            Id = "ac0d86b3-7452-4fa8-8634-6a81d1272544",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "25650002-8dfc-467d-9b86-8dc930bca7b0",
+                            ConcurrencyStamp = "9e727209-c012-4245-a034-b66ee7975712",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2fcca26e-b53f-4868-b955-65f022ba0465",
+                            SecurityStamp = "032c48fe-a241-4140-9c92-0314abbd692c",
                             TwoFactorEnabled = false,
                             city = "Admin1City",
                             gender = "Male",
@@ -582,13 +587,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "78400991-1163-4938-bb02-e1e35db7c6eb",
+                            Id = "4f289feb-5a1f-4f02-b59b-a093d04e838a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7f94c3ef-32f9-40e4-9b5f-1addd8731e6a",
+                            ConcurrencyStamp = "b34ab0ef-2177-4cd7-b6f4-a72e68cc3337",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "451ea15a-c282-4591-8be2-1461a004d43d",
+                            SecurityStamp = "7d001154-7597-4f27-91f5-a3550e798bd3",
                             TwoFactorEnabled = false,
                             city = "Admin2City",
                             gender = "Male",

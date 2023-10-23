@@ -10,7 +10,7 @@ public class UnitOfWork : IUnitOfWork
     public IProductRepository Product { get; private set; }
     public IBookingRepository Booking { get; private set; }
     public IBookingHeaderRepository BookingHeader { get; private set; }
-    public IBookingDetailRepository BookingDetail { get; private set; }
+    //public IBookingDetailRepository BookingDetail { get; private set; }
     public IGratisPointRepository GratisPointPackages { get; private set; }
     public IGratisPurchaseRepository GratisPurchase { get; private set; }
 
@@ -22,7 +22,7 @@ public class UnitOfWork : IUnitOfWork
         Product = new ProductRepository(_db);
         Booking = new BookingRepository(_db);
         BookingHeader = new BookingHeaderRepository(_db);
-        BookingDetail = new BookingDetailRepository(_db);
+        //BookingDetail = new BookingDetailRepository(_db);
         GratisPointPackages = new GratisPointRepository(_db);
         GratisPurchase = new GratisPurchaseRepository(_db);
     }

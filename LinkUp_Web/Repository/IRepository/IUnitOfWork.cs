@@ -6,7 +6,7 @@ public interface IUnitOfWork
     ICategoryRepository Category { get; }
     IProductRepository Product { get; }
     IBookingRepository Booking { get; }
-    IBookingDetailRepository BookingDetail { get; }
+    //IBookingDetailRepository BookingDetail { get; }
     IBookingHeaderRepository BookingHeader { get; }
     IGratisPointRepository GratisPointPackages { get; }
     IGratisPurchaseRepository GratisPurchase { get; }

@@ -124,7 +124,7 @@ public class GratisPointController : Controller
          {
              _unitOfWork.GratisPurchase.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
              _unitOfWork.GratisPurchase.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-             _unitOfWork.ApplicationUser.UpdateGratisPoints(userId,gratisPurchase.gratisPointQuantity);
+             _unitOfWork.ApplicationUser.BuyGratisPoints(userId,gratisPurchase.gratisPointQuantity);
              
              _unitOfWork.Save();
          }

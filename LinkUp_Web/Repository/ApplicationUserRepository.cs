@@ -17,11 +17,19 @@ public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicati
         _db.ApplicationUsers.Update(obj);
     }
 
-    public void UpdateGratisPoints(string userId, int newGratisPointsBought)
+    public void BuyGratisPoints(string userId, int newGratisPointsBought)
     {
         var users = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
 
-        var currentGratisPoint = users.gratisPoint += newGratisPointsBought;
+        var currentGratisPoint = users.gratisPoint + newGratisPointsBought;
+        users.gratisPoint = currentGratisPoint;
+    }
+    
+    public void SpendGratisPoints(string userId, int gratisPointsSpent)
+    {
+        var users = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+
+        var currentGratisPoint = users.gratisPoint - gratisPointsSpent;
         users.gratisPoint = currentGratisPoint;
     }
 }

@@ -22,12 +22,10 @@ public class BookingHeader
     public string? seatTableNumber { get; set; }
     public string? attendee { get; set; }
 
-    public DateTime paymentDate { get; set; }
+    public DateTime? paymentDate { get; set; }
 
-    [Required]
-    public string phoneNumber { get; set; }
+    public string? phoneNumber { get; set; }
     public string? streetAddress { get; set; }
-    [Required]
     public string? city { get; set; }
     public string? region { get; set; }
     public string? postalCode { get; set; }

@@ -104,6 +104,7 @@ public class BookingController : Controller
         };
     
         BookingVM.BookingHeader.applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+        
         BookingVM.BookingHeader.name = BookingVM.BookingHeader.applicationUser.name;
         BookingVM.BookingHeader.phoneNumber = BookingVM.BookingHeader.applicationUser.PhoneNumber;
         BookingVM.BookingHeader.streetAddress = BookingVM.BookingHeader.applicationUser.streetAddress;
@@ -121,27 +122,47 @@ public class BookingController : Controller
     
     // [HttpPost]
     //  [ActionName("Summary")]
-    //  public IActionResult SummaryPOST()
-    //  {
-    //      var claimsIdentity = (ClaimsIdentity)User.Identity;
-    //      var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-    //  
-    //      var usersCurrentGratisPointBalance = Convert.ToDouble(_unitOfWork.ApplicationUser.
-    //          Get(u => u.Id == userId).gratisPoint);
-    //  
-    //      var totalBookingPrice = BookingVM.BookingHeader.orderTotal;
-    //  
-    //      if (usersCurrentGratisPointBalance < totalBookingPrice)
-    //      {
-    //          return View();
-    //      }
-    //      else
-    //      {
-    //          usersCurrentGratisPointBalance -= totalBookingPrice;
-    //          _unitOfWork.ApplicationUser.UpdateGratisPoints(userId, Convert.ToInt32(usersCurrentGratisPointBalance));
-    //      }
-    //      return RedirectToAction(nameof(OrderConfirmation));
-    //  }
+     // public IActionResult SummaryPOST()
+     // {
+     //     var claimsIdentity = (ClaimsIdentity)User.Identity;
+     //     var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+     //
+     //     BookingVM.BookingList = _unitOfWork.Booking.
+     //         GetAll(u => u.applicationUserId == userId, includeProperties: "product");
+     //
+     //     BookingVM.BookingHeader.applicationUserId = userId;
+     //     BookingVM.BookingHeader.dateBooked = DateTime.UtcNow;
+     //     //come and change this later to what customer actually booked for TODO
+     //     BookingVM.BookingHeader.bookingDateTime = DateTime.UtcNow;
+     //
+     //     foreach (var booking in BookingVM.BookingList)
+     //     {
+     //         booking.price = GetPriceBasedOnPlusOnes(booking);
+     //         BookingVM.BookingHeader.orderTotal += booking.price;
+     //     }
+     //     //come and change this later to what customer actually booked for TODO
+     //     BookingVM.BookingHeader.paymentDate = DateTime.UtcNow;
+     //     _unitOfWork.BookingHeader.Add(BookingVM.BookingHeader);
+     //     _unitOfWork.Save();
+     //     
+     //     var usersCurrentGratisPointBalance = Convert.ToDouble(_unitOfWork.ApplicationUser.
+     //         Get(u => u.Id == userId).gratisPoint);
+     //
+     //     var totalBookingPrice = BookingVM.BookingHeader.orderTotal;
+     //
+     //     if (usersCurrentGratisPointBalance < totalBookingPrice)
+     //     {
+     //         return View();
+     //     }
+     //     else
+     //     {
+     //         usersCurrentGratisPointBalance -= totalBookingPrice;
+     //         _unitOfWork.ApplicationUser.UpdateGratisPoints(userId, Convert.ToInt32(usersCurrentGratisPointBalance));
+     //     }
+     //     return RedirectToAction(nameof(OrderConfirmation));
+     // }
+     
+     
     [HttpPost]
     [ActionName("Summary")]
     public IActionResult SummaryPOST()
@@ -149,22 +170,37 @@ public class BookingController : Controller
         try
         {
             var userId = GetCurrentUserId();
+            
+            BookingVM.BookingList = _unitOfWork.Booking.
+                GetAll(u => u.applicationUserId == userId, includeProperties: "product");
 
+            BookingVM.BookingHeader.applicationUserId = userId;
+            BookingVM.BookingHeader.dateBooked = DateTime.UtcNow;
+            //come and change this later to what customer actually booked for TODO
+            BookingVM.BookingHeader.bookingDateTime = DateTime.UtcNow;
+
+            foreach (var booking in BookingVM.BookingList)
+            {
+                booking.price = GetPriceBasedOnPlusOnes(booking);
+                BookingVM.BookingHeader.orderTotal += booking.price;
+            }
+            //come and change this later to what customer actually booked for TODO
+            BookingVM.BookingHeader.paymentDate = DateTime.UtcNow;
+            _unitOfWork.BookingHeader.Add(BookingVM.BookingHeader);
+            _unitOfWork.Save();
+    
             var usersCurrentGratisPointBalance = Convert.ToDouble(GetUserGratisPointBalance(userId));
-
+    
             var totalBookingPrice = BookingVM.BookingHeader.orderTotal;
-
+    
             if (usersCurrentGratisPointBalance < totalBookingPrice)
             {
                 // Handle insufficient funds (e.g., display an error message)
                 return RedirectToAction(nameof(Index));
             }
-
-            usersCurrentGratisPointBalance -= totalBookingPrice;
-
-            UpdateUserGratisPoints(userId, Convert.ToInt32(usersCurrentGratisPointBalance));
-
-            return RedirectToAction(nameof(OrderConfirmation));
+            UpdateUserGratisPoints(userId, Convert.ToInt32(BookingVM.BookingHeader.orderTotal));
+            
+            return RedirectToAction(nameof(OrderConfirmation), new{id = BookingVM.BookingHeader.Id});
         }
         catch (Exception ex)
         {
@@ -187,30 +223,21 @@ public class BookingController : Controller
     }
     private void UpdateUserGratisPoints(string userId, int newPointBalance)
     {
-        _unitOfWork.ApplicationUser.UpdateGratisPoints(userId, Convert.ToInt32(newPointBalance));
+        _unitOfWork.ApplicationUser.SpendGratisPoints(userId, Convert.ToInt32(newPointBalance));
+        _unitOfWork.Save();
     }
 
     
     public IActionResult OrderConfirmation(int id)
     {
-         // BookingHeader bookingHeader =
-         //     _unitOfWork.BookingHeader.Get(u => u.Id == id, includeProperties: "applicationUser");
-         //
-         // //an instant payment order
-         // var service = new SessionService();
-         // Session session = service.Get(bookingHeader.sessionId);
-         //
-         // if (session.PaymentStatus.ToLower() == "paid")
-         // {
-         //     _unitOfWork.BookingHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
-         //     _unitOfWork.BookingHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-         //     _unitOfWork.Save();
-         // }
-         // List<Booking> bookings = _unitOfWork.Booking
-         //     .GetAll(u => u.applicationUserId == bookingHeader.applicationUserId).ToList();
-         //
-         // _unitOfWork.Booking.RemoveRange(bookings);
-         // _unitOfWork.Save();
+         BookingHeader bookingHeader =
+             _unitOfWork.BookingHeader.Get(u => u.Id == id, includeProperties: "applicationUser");
+         
+         List<Booking> bookings = _unitOfWork.Booking
+             .GetAll(u => u.applicationUserId == bookingHeader.applicationUserId).ToList();
+         
+         _unitOfWork.Booking.RemoveRange(bookings);
+         _unitOfWork.Save();
     
         return View(id);
     }

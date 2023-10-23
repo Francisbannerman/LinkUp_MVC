@@ -23,10 +23,6 @@ public class Booking
     [ValidateNever]
     public ApplicationUser applicationUser { get; set; }
     
+    [NotMapped]
     public double price { get; set; }
-
-    public double orderTotal()
-    {
-        return price * (plusOne / 2);
-    }
 }
