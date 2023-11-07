@@ -3,6 +3,7 @@ using System;
 using LinkUp_Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LinkUp_Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231107104635_addGratisPointsPackagesAgn10")]
+    partial class addGratisPointsPackagesAgn10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,7 +269,7 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            productId = new Guid("3d76356d-34d9-442d-9330-fbae88ab3e30"),
+                            productId = new Guid("bdbe2b5f-d676-44ab-a3fd-d2a0073e66b8"),
                             categoryId = 1,
                             displayPrice = 110.0,
                             imageUrl = "dkhdhdhjhvdjh",
@@ -279,7 +282,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("b9bc844a-2caf-45b4-8798-f697b4ad7366"),
+                            productId = new Guid("463514bf-ca80-49bf-bad4-0e9d434fa1e9"),
                             categoryId = 2,
                             displayPrice = 120.0,
                             imageUrl = "1dkhdhdhjhvdjh",
@@ -292,7 +295,7 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("fa5d19b7-81de-41b4-ac1b-fbcae7c98c9e"),
+                            productId = new Guid("08bcd912-ae4b-46eb-a6cf-98a4ef71a2cf"),
                             categoryId = 3,
                             displayPrice = 130.0,
                             imageUrl = "2dkhdhdhjhvdjh",
@@ -532,9 +535,6 @@ namespace LinkUp_Web.Migrations
                     b.Property<string>("referredCode")
                         .HasColumnType("text");
 
-                    b.Property<int>("referredUsers")
-                        .HasColumnType("integer");
-
                     b.Property<string>("region")
                         .HasColumnType("text");
 
@@ -552,57 +552,54 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5d1da9d8-2da1-429d-9d35-cca0aa0e2fd7",
+                            Id = "b82f8032-33be-4e61-80b5-c8252809637e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6111036b-9456-464f-99fc-2b627ff71f54",
+                            ConcurrencyStamp = "5c9c41a6-d744-4f26-a207-c3b1a7e586f7",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4d0b2487-df4f-4f43-96bb-328c4a1885c7",
+                            SecurityStamp = "1b52b754-28fb-4cfc-bbbc-1123e5a8a22a",
                             TwoFactorEnabled = false,
                             city = "AdminCity",
                             gender = "Male",
                             gratisPoint = 0,
                             name = "Admin",
-                            referredUsers = 0,
                             region = "AdminRegion",
                             streetAddress = "AdminHome",
                             userDateJoined = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = "c2da4801-f37d-4b83-aa59-a9892d6f1c0c",
+                            Id = "55d26ab7-da37-407f-9bfd-7287688a24c0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "516c3308-179e-476c-b91e-35a33ffc09e3",
+                            ConcurrencyStamp = "43f3e59d-fdfd-484c-b096-87be27cec516",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "51764bef-49a8-44ff-90b7-28e6a883ef27",
+                            SecurityStamp = "b0e39ad1-1ff1-42e1-870d-435219bb93e5",
                             TwoFactorEnabled = false,
                             city = "Admin1City",
                             gender = "Male",
                             gratisPoint = 0,
                             name = "Admin1",
-                            referredUsers = 0,
                             region = "Admin1Region",
                             streetAddress = "Admin1Home",
                             userDateJoined = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = "7e4c66c2-bd07-4549-8b44-3736a92ee996",
+                            Id = "14f6a069-059c-482f-ad35-a1c7fd3daf09",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "754b743c-3677-4645-ae9f-259aac18fead",
+                            ConcurrencyStamp = "c9382e2e-83c5-4bb7-be9e-4757bb5d888f",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b7c5cfe8-4c88-4ecc-aea5-68642d10fd08",
+                            SecurityStamp = "f3133097-b1cb-4fc9-9d83-6a30a6680897",
                             TwoFactorEnabled = false,
                             city = "Admin2City",
                             gender = "Male",
                             gratisPoint = 0,
                             name = "Admin2",
-                            referredUsers = 0,
                             region = "Admin2Region",
                             streetAddress = "Admin2Home",
                             userDateJoined = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))

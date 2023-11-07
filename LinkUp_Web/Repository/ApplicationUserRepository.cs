@@ -32,4 +32,10 @@ public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicati
         var currentGratisPoint = users.gratisPoint - gratisPointsSpent;
         users.gratisPoint = currentGratisPoint;
     }
+
+    public void UpdateReferredUsers(string userId)
+    {
+        var users = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+        users.referredUsers++;
+    }
 }

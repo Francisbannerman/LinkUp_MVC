@@ -1,0 +1,60 @@
+@model ApplicationUser
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Referral Code</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+                <div class="col-6 text-end">
+                    <button id="requestReferralCodeButton" class="btn btn-primary" onclick="requestReferralCode()">
+                        <i class="bi bi-plus-circle"></i> Request Referral Code
+                    </button>
+                    <div id="referralCodeResult" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function requestReferralCode() {
+        // Make an AJAX request to the "RequestReferralCode" action
+        $.ajax({
+            url: '@Url.Action("RequestReferralCode", "ReferralCode")',
+            type: 'GET',
+            success: function (data) {
+                // Display the data under the button
+                $('#referralCodeResult').html(data);
+                $('#referralCodeResult').show();
+
+                // Change the button text to "Copy"
+                $('#requestReferralCodeButton').html('<i class="bi bi-clipboard"></i> Copy');
+                                
+                $('#requestReferralCodeButton').off("click"); // Remove previous click event handler
+
+                $('#requestReferralCodeButton').on("click", function() {
+                                    copyTextToClipboard(data);
+                });
+            }
+        });
+    } 
+    
+    function copyTextToClipboard(text) {
+            const tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+    
+            tempInput.select();
+            document.execCommand("copy");
+    
+            document.body.removeChild(tempInput);
+    
+            alert("Text copied to clipboard: " + text);
+        }
+</script>

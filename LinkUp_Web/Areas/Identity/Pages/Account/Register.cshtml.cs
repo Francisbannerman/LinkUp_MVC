@@ -11,6 +11,8 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using LinkUp_Web.Models;
+using LinkUp_Web.Repository;
+using LinkUp_Web.Repository.IRepository;
 using LinkUp_Web.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -27,6 +29,7 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+        private IUnitOfWork _unitOfWork;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
@@ -36,6 +39,7 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+            IUnitOfWork unitOfWork,
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
@@ -43,6 +47,7 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
             _roleManager = roleManager;
             _userStore = userStore;
@@ -116,6 +121,8 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
             public string? Region { get; set; }
             public string? Gender { get; set; }
             public DateTimeOffset? userDateJoined { get; set; }
+            public string? referredCode { get; set; }
+            public int? referredUsers { get; set; }
             
             [Required]
             public string PhoneNumber { get; set; }
@@ -160,10 +167,14 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
                 user.region = Input.Region;
                 user.gender = Input.Gender;
                 user.userDateJoined = DateTimeOffset.Now;
+                user.referralCode = Input.Name.Substring(0, 4) + GenerateUniqueReferralCode();
                 user.role = Input.Role;
                 user.PhoneNumber = Input.PhoneNumber;
+                user.referredCode = Input.referredCode;
+                user.referredUsers = 0;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                PayBonusToReferrer(Input.referredCode);
 
                 if (result.Succeeded)
                 {
@@ -205,7 +216,6 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             // If we got this far, something failed, redisplay form
             return Page();
         }
@@ -231,6 +241,24 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<IdentityUser>)_userStore;
+        }
+
+        private string GenerateUniqueReferralCode()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Random random = new Random();
+            string referralCode;
+
+            referralCode = new string(Enumerable.Repeat(chars, 3).Select(s => s[random.Next(s.Length)]).ToArray());
+            return referralCode;
+        }
+
+        private void PayBonusToReferrer(string referralCode)
+        {
+            var referrerDetails = _unitOfWork.ApplicationUser.Get(u => u.referralCode == referralCode);
+            _unitOfWork.ApplicationUser.BuyGratisPoints(referrerDetails.Id,5);
+            _unitOfWork.ApplicationUser.UpdateReferredUsers(referrerDetails.Id);
+            _unitOfWork.Save();
         }
     }
 }

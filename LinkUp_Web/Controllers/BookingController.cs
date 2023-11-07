@@ -235,8 +235,9 @@ public class BookingController : Controller
          
          List<Booking> bookings = _unitOfWork.Booking
              .GetAll(u => u.applicationUserId == bookingHeader.applicationUserId).ToList();
-         
+
          _unitOfWork.Booking.RemoveRange(bookings);
+         _unitOfWork.ApplicationUser.BuyGratisPoints(GetCurrentUserId(),1);
          _unitOfWork.Save();
     
         return View(id);

@@ -18,6 +18,8 @@ public class ApplicationUser : IdentityUser
     public string? role { get; set; }
     public int gratisPoint { get; set; }
     public string? referralCode { get; set; }
+    public string? referredCode { get; set; }
+    public int referredUsers { get; set; }
 
     public ApplicationUser()
     {
