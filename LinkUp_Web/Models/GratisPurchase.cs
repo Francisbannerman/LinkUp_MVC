@@ -1,4 +1,3 @@
-using Microsoft.Build.Framework;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -7,7 +6,8 @@ namespace LinkUp_Web.Models;
 public class GratisPurchase
 {
     [Key]
-    public int gratisPurchaseId { get; set; }
+    [Required]
+    public Guid gratisPurchaseId { get; set; }
     public int gratisPointQuantity { get; set; }
     public double amountForGratisPoint { get; set; }
     public DateTimeOffset datePurchased { get; set; }

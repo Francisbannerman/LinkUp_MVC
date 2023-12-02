@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using LinkUp_Web.Models;
 using LinkUp_Web.Repository.IRepository;
+using LinkUp_Web.Services;
 using Microsoft.AspNetCore.Authorization;
 
 namespace LinkUp_Web.Controllers;
@@ -11,16 +11,18 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly GetUserIdService _getUserIdService;
 
-    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
+    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, 
+        GetUserIdService getUserIdService)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _getUserIdService = getUserIdService;
     }
 
     public IActionResult Index()
     {
-        //IEnumerable<Product> productList = _unitOfWork.Product.GetAll();
         IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "category");
         return View(productList);
     }
@@ -30,8 +32,9 @@ public class HomeController : Controller
         Booking book = new()
         {
             product = _unitOfWork.Product.Get(u => u.productId == productId, includeProperties: "category"),
-            plusOne = 0,
-            ProductId = productId
+            numberOfAttendees = 1,
+            SelectedDateTime = DateTimeOffset.Now,
+            ProductId = productId,
         };
         return View(book);
     }
@@ -40,15 +43,13 @@ public class HomeController : Controller
     // [Authorize]
     public IActionResult Details(Booking booking)
     {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-        booking.applicationUserId = userId;
+        booking.applicationUserId = _getUserIdService.GetCurrentUserId();
 
         Booking bookingFromDb = _unitOfWork.Booking.
-            Get(u => u.applicationUserId == userId && u.ProductId == booking.ProductId);
+            Get(u => u.applicationUserId == _getUserIdService.GetCurrentUserId() && u.ProductId == booking.ProductId);
         if (bookingFromDb != null)
         {
-            bookingFromDb.plusOne += booking.plusOne;
+            bookingFromDb.numberOfAttendees += booking.numberOfAttendees;
             _unitOfWork.Booking.Update(bookingFromDb);
         }
         else

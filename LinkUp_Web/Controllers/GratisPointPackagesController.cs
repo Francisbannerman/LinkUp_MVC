@@ -1,7 +1,6 @@
-using System.Security.Claims;
 using LinkUp_Web.Models;
 using LinkUp_Web.Repository.IRepository;
-using LinkUp_Web.Utility;
+using LinkUp_Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +11,12 @@ namespace LinkUp_Web.Controllers;
 public class GratisPointPackagesController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly GetUserIdService _getUserIdService;
 
-    public GratisPointPackagesController(IUnitOfWork unitOfWork)
+    public GratisPointPackagesController(IUnitOfWork unitOfWork, GetUserIdService getUserIdService)
     {
         _unitOfWork = unitOfWork;
+        _getUserIdService = getUserIdService;
     }
     
     // GET
@@ -33,15 +34,10 @@ public class GratisPointPackagesController : Controller
     [HttpPost]
     public IActionResult Create(GratisPointPackages obj)
     {
-        var maxId = _unitOfWork.GratisPointPackages.Max(u => u.gratisPointPackagesId);
-        maxId = maxId + 1;
-        obj.gratisPointPackagesId = maxId;
-        
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        obj.gratisPointPackagesId = Guid.NewGuid();
         
         obj.dateAdded = DateTimeOffset.Now;
-        obj.addedByWho = userId;
+        obj.addedByWho = _getUserIdService.GetCurrentUserId();
 
         if (ModelState.IsValid)
         {
@@ -52,9 +48,9 @@ public class GratisPointPackagesController : Controller
         return View();
     }
 
-    public IActionResult Edit(int? id)
+    public IActionResult Edit(Guid? id)
     {
-        if (id == null || id == 0)
+        if (id == null)
         {
             return NotFound();
         }
@@ -79,9 +75,9 @@ public class GratisPointPackagesController : Controller
         return View();
     }
 
-    public IActionResult Delete(int? id)
+    public IActionResult Delete(Guid? id)
     {
-        if (id == null || id == 0)
+        if (id == null)
         {
             return NotFound();
         }
@@ -95,7 +91,7 @@ public class GratisPointPackagesController : Controller
     }
 
     [HttpPost, ActionName("Delete")]
-    public IActionResult DeletePost(int? id)
+    public IActionResult DeletePost(Guid? id)
     {
         GratisPointPackages? obj = _unitOfWork.GratisPointPackages.Get(u => u.gratisPointPackagesId == id);
 

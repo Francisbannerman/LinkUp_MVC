@@ -120,9 +120,7 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
             public string? City { get; set; }
             public string? Region { get; set; }
             public string? Gender { get; set; }
-            public DateTimeOffset? userDateJoined { get; set; }
             public string? referredCode { get; set; }
-            public int? referredUsers { get; set; }
             
             [Required]
             public string PhoneNumber { get; set; }
@@ -167,7 +165,15 @@ namespace LinkUp_Web.Areas.Identity.Pages.Account
                 user.region = Input.Region;
                 user.gender = Input.Gender;
                 user.userDateJoined = DateTimeOffset.Now;
-                user.referralCode = Input.Name.Substring(0, 4) + GenerateUniqueReferralCode();
+
+                if (Input.Name.Length < 4)
+                {
+                    user.referralCode = Input.Name + GenerateUniqueReferralCode();
+                }
+                else
+                {
+                    user.referralCode = Input.Name.Substring(0, 4) + GenerateUniqueReferralCode();
+                }
                 user.role = Input.Role;
                 user.PhoneNumber = Input.PhoneNumber;
                 user.referredCode = Input.referredCode;

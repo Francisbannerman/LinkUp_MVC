@@ -1,11 +1,8 @@
-using System.Security.Claims;
 using LinkUp_Web.Models;
 using LinkUp_Web.Models.ViewModels;
 using LinkUp_Web.Repository.IRepository;
-using LinkUp_Web.Utility;
-using Microsoft.AspNetCore.Authorization;
+using LinkUp_Web.Services;
 using Microsoft.AspNetCore.Mvc;
-using Stripe.Checkout;
 
 namespace LinkUp_Web.Controllers;
 
@@ -14,53 +11,63 @@ namespace LinkUp_Web.Controllers;
 public class BookingController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly NotificationService _notificationService;
+    private readonly GratisPointService _gratisPointService;
+    private readonly CurrentPendingBookingService _currentPendingBookingService;
+    private readonly GetUserIdService _getUserIdService;
     [BindProperty] public BookingVM BookingVM { get; set; }
-
-    public BookingController(IUnitOfWork unitOfWork)
+    
+    public BookingController(IUnitOfWork unitOfWork, NotificationService notificationService, 
+        GratisPointService gratisPointService, CurrentPendingBookingService currentPendingBookingService,
+        GetUserIdService getUserIdService)
     {
         _unitOfWork = unitOfWork;
+        _notificationService = notificationService;
+        _gratisPointService = gratisPointService;
+        _currentPendingBookingService = currentPendingBookingService;
+        _getUserIdService = getUserIdService;
     }
 
     // GET
     public IActionResult Index()
     {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
         BookingVM = new()
         {
-            BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
-                includeProperties: "product"),
+            BookingList = _currentPendingBookingService.GetCurrentUsersCurrentBookings(),
             BookingHeader = new()
         };
-        foreach (var booking in BookingVM.BookingList)
+        foreach (var booking in _currentPendingBookingService.GetCurrentUsersCurrentBookings())
         {
-            booking.price = GetPriceBasedOnPlusOnes(booking);
+            booking.price = GetPriceBasedNumberOfAttendees(booking);
             BookingVM.BookingHeader.orderTotal += booking.price;
         }
-
         return View(BookingVM);
     }
 
-    private double GetPriceBasedOnPlusOnes(Booking booking)
+    private double GetPriceBasedNumberOfAttendees(Booking booking)
     {
-        if (booking.plusOne == 0)
+        double finalPrice;
+        if (booking.numberOfAttendees == 1)
         {
-            return booking.product.displayPrice;
+            finalPrice = booking.product.displayPrice;
         }
-        else
+        else if (booking.numberOfAttendees == 2)
         {
-            double temp1 = booking.plusOne * 0.5;
-            double temp2 = booking.product.displayPrice * temp1;
-            double finalPrice = booking.product.displayPrice + temp2;
-            return finalPrice;
+            finalPrice = booking.product.displayPrice * 2;
         }
+        else 
+        {
+            var indexForNumOfUsersEligibleForExtraPrice = (booking.numberOfAttendees - 2) * 0.5;
+            var amountToPayForExtraUsers = booking.product.displayPrice * indexForNumOfUsersEligibleForExtraPrice;
+            finalPrice = (booking.product.displayPrice * 2) + amountToPayForExtraUsers;
+        }
+        return finalPrice;
     }
 
     public IActionResult Plus(Guid bookingId)
     {
         var bookingFromDb = _unitOfWork.Booking.Get(u => u.ProductId == bookingId);
-        bookingFromDb.plusOne = bookingFromDb.plusOne + 1;
+        bookingFromDb.numberOfAttendees = bookingFromDb.numberOfAttendees + 1;
         _unitOfWork.Booking.Update(bookingFromDb);
         _unitOfWork.Save();
         return RedirectToAction(nameof(Index));
@@ -69,16 +76,15 @@ public class BookingController : Controller
     public IActionResult Minus(Guid bookingId)
     {
         var bookingFromDb = _unitOfWork.Booking.Get(u => u.ProductId == bookingId);
-        if (bookingFromDb.plusOne <= 0)
+        if (bookingFromDb.numberOfAttendees <= 1)
         {
             _unitOfWork.Booking.Remove(bookingFromDb);
         }
         else
         {
-            bookingFromDb.plusOne -= 1;
+            bookingFromDb.numberOfAttendees -= 1;
             _unitOfWork.Booking.Update(bookingFromDb);
         }
-
         _unitOfWork.Save();
         return RedirectToAction(nameof(Index));
     }
@@ -93,153 +99,88 @@ public class BookingController : Controller
 
     public IActionResult Summary()
     {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-    
         BookingVM = new()
         {
-            BookingList = _unitOfWork.Booking.GetAll(u => u.applicationUserId == userId,
-                includeProperties: "product"),
+            BookingList = _currentPendingBookingService.GetCurrentUsersCurrentBookings(),
             BookingHeader = new()
         };
-    
-        BookingVM.BookingHeader.applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-        
+        BookingVM.BookingHeader.applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == _getUserIdService.GetCurrentUserId());
         BookingVM.BookingHeader.name = BookingVM.BookingHeader.applicationUser.name;
         BookingVM.BookingHeader.phoneNumber = BookingVM.BookingHeader.applicationUser.PhoneNumber;
         BookingVM.BookingHeader.streetAddress = BookingVM.BookingHeader.applicationUser.streetAddress;
         BookingVM.BookingHeader.city = BookingVM.BookingHeader.applicationUser.city;
         BookingVM.BookingHeader.region = BookingVM.BookingHeader.applicationUser.region;
     
-        foreach (var booking in BookingVM.BookingList)
+        foreach (var booking in _currentPendingBookingService.GetCurrentUsersCurrentBookings())
         {
-            booking.price = GetPriceBasedOnPlusOnes(booking);
+            booking.price = GetPriceBasedNumberOfAttendees(booking);
             BookingVM.BookingHeader.orderTotal += booking.price;
         }
-    
         return View(BookingVM);
     }
     
-    // [HttpPost]
-    //  [ActionName("Summary")]
-     // public IActionResult SummaryPOST()
-     // {
-     //     var claimsIdentity = (ClaimsIdentity)User.Identity;
-     //     var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-     //
-     //     BookingVM.BookingList = _unitOfWork.Booking.
-     //         GetAll(u => u.applicationUserId == userId, includeProperties: "product");
-     //
-     //     BookingVM.BookingHeader.applicationUserId = userId;
-     //     BookingVM.BookingHeader.dateBooked = DateTime.UtcNow;
-     //     //come and change this later to what customer actually booked for TODO
-     //     BookingVM.BookingHeader.bookingDateTime = DateTime.UtcNow;
-     //
-     //     foreach (var booking in BookingVM.BookingList)
-     //     {
-     //         booking.price = GetPriceBasedOnPlusOnes(booking);
-     //         BookingVM.BookingHeader.orderTotal += booking.price;
-     //     }
-     //     //come and change this later to what customer actually booked for TODO
-     //     BookingVM.BookingHeader.paymentDate = DateTime.UtcNow;
-     //     _unitOfWork.BookingHeader.Add(BookingVM.BookingHeader);
-     //     _unitOfWork.Save();
-     //     
-     //     var usersCurrentGratisPointBalance = Convert.ToDouble(_unitOfWork.ApplicationUser.
-     //         Get(u => u.Id == userId).gratisPoint);
-     //
-     //     var totalBookingPrice = BookingVM.BookingHeader.orderTotal;
-     //
-     //     if (usersCurrentGratisPointBalance < totalBookingPrice)
-     //     {
-     //         return View();
-     //     }
-     //     else
-     //     {
-     //         usersCurrentGratisPointBalance -= totalBookingPrice;
-     //         _unitOfWork.ApplicationUser.UpdateGratisPoints(userId, Convert.ToInt32(usersCurrentGratisPointBalance));
-     //     }
-     //     return RedirectToAction(nameof(OrderConfirmation));
-     // }
-     
-     
     [HttpPost]
     [ActionName("Summary")]
     public IActionResult SummaryPOST()
     {
         try
         {
-            var userId = GetCurrentUserId();
-            
-            BookingVM.BookingList = _unitOfWork.Booking.
-                GetAll(u => u.applicationUserId == userId, includeProperties: "product");
-
-            BookingVM.BookingHeader.applicationUserId = userId;
-            BookingVM.BookingHeader.dateBooked = DateTime.UtcNow;
-            //come and change this later to what customer actually booked for TODO
-            BookingVM.BookingHeader.bookingDateTime = DateTime.UtcNow;
-
-            foreach (var booking in BookingVM.BookingList)
-            {
-                booking.price = GetPriceBasedOnPlusOnes(booking);
-                BookingVM.BookingHeader.orderTotal += booking.price;
-            }
-            //come and change this later to what customer actually booked for TODO
-            BookingVM.BookingHeader.paymentDate = DateTime.UtcNow;
-            _unitOfWork.BookingHeader.Add(BookingVM.BookingHeader);
-            _unitOfWork.Save();
-    
-            var usersCurrentGratisPointBalance = Convert.ToDouble(GetUserGratisPointBalance(userId));
-    
-            var totalBookingPrice = BookingVM.BookingHeader.orderTotal;
-    
-            if (usersCurrentGratisPointBalance < totalBookingPrice)
+            double userBalance = Convert.ToDouble(_gratisPointService.GetUserGratisPointBalance(_getUserIdService.GetCurrentUserId()));
+            if (userBalance < BookingVM.BookingHeader.orderTotal)
             {
                 // Handle insufficient funds (e.g., display an error message)
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "GratisPoint");
             }
-            UpdateUserGratisPoints(userId, Convert.ToInt32(BookingVM.BookingHeader.orderTotal));
             
+            BookingVM.BookingHeader.applicationUserId = _getUserIdService.GetCurrentUserId();
+            BookingVM.BookingHeader.dateBooked = DateTime.UtcNow;
+            BookingVM.BookingHeader.orderStatus = "Pending Approval";
+    
+            foreach (var booking in _currentPendingBookingService.GetCurrentUsersCurrentBookings())
+            {
+                booking.price = GetPriceBasedNumberOfAttendees(booking);
+                BookingVM.BookingHeader.orderTotal += booking.price;
+                BookingVM.BookingHeader.bookingDateTime = booking.SelectedDateTime;
+            }
+            _unitOfWork.BookingHeader.Add(BookingVM.BookingHeader);
+
+            foreach (var booking in _currentPendingBookingService.GetCurrentUsersCurrentBookings())
+            {
+                var temps = new BookedProduct
+                {
+                    id = Guid.NewGuid(),
+                    applicationUserId = _getUserIdService.GetCurrentUserId(),
+                    productId = booking.ProductId,
+                    bookingHeaderId = BookingVM.BookingHeader.Id.ToString(),
+                    numberOfAttendees = booking.numberOfAttendees,
+                    productDateBooked = booking.SelectedDateTime
+                };
+                _unitOfWork.BookedProduct.Add(temps);
+            }
+            _gratisPointService.UpdateUserGratisPoints(_getUserIdService.GetCurrentUserId(),Convert.ToInt32(BookingVM.BookingHeader.orderTotal));
+            var msg = $"{BookingVM.BookingHeader.orderTotal} has been deducted from your gratis account balance. " +
+                      $"Your new gratis balance is {_gratisPointService.GetUserGratisPointBalance(_getUserIdService.GetCurrentUserId())}";
+            _notificationService.AddNotification(msg,_getUserIdService.GetCurrentUserId());
+            _unitOfWork.Save();
             return RedirectToAction(nameof(OrderConfirmation), new{id = BookingVM.BookingHeader.Id});
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Handle exceptions or errors appropriately
-            // Log the exception for debugging
-            // Redirect to an error page or display an error message
             return View("Error");
         }
     }
 
-    private string GetCurrentUserId()
-    {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-    }
-    private decimal GetUserGratisPointBalance(string userId)
-    {
-        var user = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-        return Convert.ToDecimal(user.gratisPoint);
-    }
-    private void UpdateUserGratisPoints(string userId, int newPointBalance)
-    {
-        _unitOfWork.ApplicationUser.SpendGratisPoints(userId, Convert.ToInt32(newPointBalance));
-        _unitOfWork.Save();
-    }
-
-    
-    public IActionResult OrderConfirmation(int id)
+    public IActionResult OrderConfirmation(Guid id)
     {
          BookingHeader bookingHeader =
              _unitOfWork.BookingHeader.Get(u => u.Id == id, includeProperties: "applicationUser");
          
          List<Booking> bookings = _unitOfWork.Booking
              .GetAll(u => u.applicationUserId == bookingHeader.applicationUserId).ToList();
-
+         
          _unitOfWork.Booking.RemoveRange(bookings);
-         _unitOfWork.ApplicationUser.BuyGratisPoints(GetCurrentUserId(),1);
+         _unitOfWork.ApplicationUser.BuyGratisPoints(_getUserIdService.GetCurrentUserId(),1);
          _unitOfWork.Save();
-    
-        return View(id);
+         return View();
     }
 }

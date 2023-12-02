@@ -81,9 +81,9 @@
 								<li class="list-group-item d-flex justify-content-between">
 									<div>
 										<h6 class="my-0">@details.product.productTitle</h6>
-										<small class="text-muted">Quantity: @details.plusOne</small>
+										<small class="text-muted">Quantity: @details.numberOfAttendees</small>
 									</div>
-									<span class="text-muted">@((details.price*details.plusOne).ToString("c"))</span>
+									<span class="text-muted">@((details.price*details.numberOfAttendees).ToString("c"))</span>
 								</li>
 								}
 

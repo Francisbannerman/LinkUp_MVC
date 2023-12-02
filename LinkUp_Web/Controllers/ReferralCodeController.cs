@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using LinkUp_Web.Repository.IRepository;
+using LinkUp_Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinkUp_Web.Controllers;
@@ -7,9 +7,11 @@ namespace LinkUp_Web.Controllers;
 public class ReferralCodeController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
-    public ReferralCodeController(IUnitOfWork unitOfWork)
+    private readonly GetUserIdService _getUserIdService;
+    public ReferralCodeController(IUnitOfWork unitOfWork, GetUserIdService getUserIdService)
     {
         _unitOfWork = unitOfWork;
+        _getUserIdService = getUserIdService;
     }
     
     // GET
@@ -20,10 +22,7 @@ public class ReferralCodeController : Controller
 
     public IActionResult RequestReferralCode()
     {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-        var userColumn = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-        
+        var userColumn = _unitOfWork.ApplicationUser.Get(u => u.Id == _getUserIdService.GetCurrentUserId());
         return Content(userColumn.referralCode);
     }
 }

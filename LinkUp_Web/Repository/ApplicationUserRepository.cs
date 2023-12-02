@@ -38,4 +38,16 @@ public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicati
         var users = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
         users.referredUsers++;
     }
+
+    public void UpdateNotifications(string userId, string message)
+    {
+        var newNotification = new List<Notification>
+        {
+            new Notification {DateTimeSent = DateTime.UtcNow, Message = message},
+        };
+        
+        var users = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+        //users.notifications.Add();
+        
+    }
 }

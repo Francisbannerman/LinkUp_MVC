@@ -6,7 +6,9 @@ namespace LinkUp_Web.Models;
 
 public class Booking
 {
-    public int Id { get; set; }
+    [Key]
+    [Required]
+    public Guid Id { get; set; }
     
     public Guid ProductId { get; set; }
     
@@ -15,7 +17,7 @@ public class Booking
     public Product product { get; set; }
     
     [Range(1,1000,ErrorMessage = "Please pick a number between 1 and 99")]
-    public int plusOne { get; set; }
+    public int numberOfAttendees { get; set; }
     
     public string applicationUserId { get; set; }
     
@@ -25,4 +27,5 @@ public class Booking
     
     [NotMapped]
     public double price { get; set; }
+    public DateTimeOffset SelectedDateTime { get; set; }
 }

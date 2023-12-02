@@ -17,7 +17,7 @@ public class GratisPurchaseRepository : Repository<GratisPurchase>, IGratisPurch
         _db.GratisPurchases.Update(obj);
     }
     
-    public void UpdateStatus(int id, string orderStatus, string? paymentStatus = null)
+    public void UpdateStatus(Guid id, string orderStatus, string? paymentStatus = null)
     {
         var orderFromDb = _db.GratisPurchases.FirstOrDefault(u => u.gratisPurchaseId == id);
         if (orderFromDb != null)
@@ -29,7 +29,7 @@ public class GratisPurchaseRepository : Repository<GratisPurchase>, IGratisPurch
         }
     }
     
-    public void UpdateStripePaymentID(int id, string sessionId, string paymentIntentId)
+    public void UpdateStripePaymentID(Guid id, string sessionId, string paymentIntentId)
     {
         var orderFromDb = _db.GratisPurchases.FirstOrDefault(u => u.gratisPurchaseId == id);
         if (!string.IsNullOrEmpty(sessionId))

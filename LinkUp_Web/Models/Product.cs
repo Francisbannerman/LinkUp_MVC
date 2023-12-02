@@ -7,6 +7,7 @@ namespace LinkUp_Web.Models;
 public class Product
 {
     [Key]
+    [Required]
     public Guid productId { get; set; }
     
     [Required]
@@ -25,7 +26,7 @@ public class Product
     [Range(1, 1000)]
     public double displayPrice { get; set; }
 
-    public int categoryId { get; set; }
+    public Guid categoryId { get; set; }
     
     [ForeignKey("CategoryId")]
     [ValidateNever]
@@ -38,5 +39,7 @@ public class Product
 
     public string productLocation { get; set; }
     
-    public int? plusOnesAllowed { get; set; }
+    public int? NumberOfAttendees { get; set; }
+    
+    public DateTimeOffset? productDateBooked { get; set; }
 }

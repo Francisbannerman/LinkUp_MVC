@@ -1,6 +1,8 @@
 using LinkUp_Web;
 using LinkUp_Web.Repository;
 using LinkUp_Web.Repository.IRepository;
+using LinkUp_Web.Services;
+using LinkUp_Web.Services.IServices;
 using LinkUp_Web.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +31,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<GetUserIdService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<IPaymentServices ,PaymentServices>();
+builder.Services.AddScoped<GratisPointService>();
+builder.Services.AddScoped<CurrentPendingBookingService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

@@ -6,7 +6,8 @@ namespace LinkUp_Web.Models;
 public class Category
 {
     [Key]
-    public int categoryId { get; set; }
+    [Required]
+    public Guid categoryId { get; set; }
 
     [Required]
     [MaxLength(30)]

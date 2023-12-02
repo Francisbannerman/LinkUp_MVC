@@ -22,13 +22,41 @@ namespace LinkUp_Web.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("LinkUp_Web.Models.Booking", b =>
+            modelBuilder.Entity("LinkUp_Web.Models.BookedProduct", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("applicationUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("bookingHeaderId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("numberOfAttendees")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTimeOffset>("productDateBooked")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("productId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("productId");
+
+                    b.ToTable("BookedProducts");
+                });
+
+            modelBuilder.Entity("LinkUp_Web.Models.Booking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("text");
@@ -36,11 +64,14 @@ namespace LinkUp_Web.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTimeOffset>("SelectedDateTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("applicationUserId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("plusOne")
+                    b.Property<int>("numberOfAttendees")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -54,11 +85,9 @@ namespace LinkUp_Web.Migrations
 
             modelBuilder.Entity("LinkUp_Web.Models.BookingHeader", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("text");
@@ -70,13 +99,13 @@ namespace LinkUp_Web.Migrations
                     b.Property<string>("attendee")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("bookingDateTime")
+                    b.Property<DateTimeOffset?>("bookingDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("city")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("dateBooked")
+                    b.Property<DateTimeOffset?>("dateBooked")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("name")
@@ -87,9 +116,6 @@ namespace LinkUp_Web.Migrations
 
                     b.Property<double>("orderTotal")
                         .HasColumnType("double precision");
-
-                    b.Property<DateTime?>("paymentDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("phoneNumber")
                         .HasColumnType("text");
@@ -115,11 +141,9 @@ namespace LinkUp_Web.Migrations
 
             modelBuilder.Entity("LinkUp_Web.Models.Category", b =>
                 {
-                    b.Property<int>("categoryId")
+                    b.Property<Guid>("categoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("categoryId"));
+                        .HasColumnType("uuid");
 
                     b.Property<int?>("displayOrder")
                         .HasColumnType("integer");
@@ -136,31 +160,64 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            categoryId = 1,
+                            categoryId = new Guid("6d87dde0-b701-4dae-99d0-713c89384844"),
                             displayOrder = 1,
                             name = "Date4Two"
                         },
                         new
                         {
-                            categoryId = 2,
+                            categoryId = new Guid("c8fa6eca-093d-4c28-a1ac-050fdfe5566b"),
                             displayOrder = 2,
                             name = "DateWithTwo"
                         },
                         new
                         {
-                            categoryId = 3,
+                            categoryId = new Guid("e48f1dde-37a4-4548-9bbd-0fc5e12cb1f1"),
                             displayOrder = 3,
                             name = "DateFromTwo"
                         });
                 });
 
+            modelBuilder.Entity("LinkUp_Web.Models.FulfilledBooking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BookingHeaderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("CustumerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("FinalStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ManagedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ManagedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingHeaderId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("FulfilledBookings");
+                });
+
             modelBuilder.Entity("LinkUp_Web.Models.GratisPointPackages", b =>
                 {
-                    b.Property<int>("gratisPointPackagesId")
+                    b.Property<Guid>("gratisPointPackagesId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("gratisPointPackagesId"));
+                        .HasColumnType("uuid");
 
                     b.Property<double>("AmountForGratisPoint")
                         .HasColumnType("double precision");
@@ -181,11 +238,9 @@ namespace LinkUp_Web.Migrations
 
             modelBuilder.Entity("LinkUp_Web.Models.GratisPurchase", b =>
                 {
-                    b.Property<int>("gratisPurchaseId")
+                    b.Property<Guid>("gratisPurchaseId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("gratisPurchaseId"));
+                        .HasColumnType("uuid");
 
                     b.Property<double>("amountForGratisPoint")
                         .HasColumnType("double precision");
@@ -214,17 +269,42 @@ namespace LinkUp_Web.Migrations
                     b.ToTable("GratisPurchases");
                 });
 
+            modelBuilder.Entity("LinkUp_Web.Models.Notification", b =>
+                {
+                    b.Property<Guid>("notificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateTimeSent")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("notificationId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("LinkUp_Web.Models.Product", b =>
                 {
                     b.Property<Guid>("productId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("NumberOfAttendees")
                         .HasColumnType("integer");
 
-                    b.Property<int>("categoryId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("categoryId")
+                        .HasColumnType("uuid");
 
                     b.Property<double>("displayPrice")
                         .HasColumnType("double precision");
@@ -232,10 +312,10 @@ namespace LinkUp_Web.Migrations
                     b.Property<string>("imageUrl")
                         .HasColumnType("text");
 
-                    b.Property<int?>("plusOnesAllowed")
-                        .HasColumnType("integer");
-
                     b.Property<DateTimeOffset>("productDateAdded")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("productDateBooked")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("productDescription")
@@ -266,8 +346,8 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            productId = new Guid("3d76356d-34d9-442d-9330-fbae88ab3e30"),
-                            categoryId = 1,
+                            productId = new Guid("fcea3913-82a9-40c4-b47f-6e698de472ba"),
+                            categoryId = new Guid("6d87dde0-b701-4dae-99d0-713c89384844"),
                             displayPrice = 110.0,
                             imageUrl = "dkhdhdhjhvdjh",
                             productDateAdded = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -279,8 +359,8 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("b9bc844a-2caf-45b4-8798-f697b4ad7366"),
-                            categoryId = 2,
+                            productId = new Guid("3088a1de-6641-4112-b102-5f7ef19dd8a9"),
+                            categoryId = new Guid("c8fa6eca-093d-4c28-a1ac-050fdfe5566b"),
                             displayPrice = 120.0,
                             imageUrl = "1dkhdhdhjhvdjh",
                             productDateAdded = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -292,8 +372,8 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            productId = new Guid("fa5d19b7-81de-41b4-ac1b-fbcae7c98c9e"),
-                            categoryId = 3,
+                            productId = new Guid("ae9fb816-9783-4be2-8b63-425eb2e1c3ff"),
+                            categoryId = new Guid("e48f1dde-37a4-4548-9bbd-0fc5e12cb1f1"),
                             displayPrice = 130.0,
                             imageUrl = "2dkhdhdhjhvdjh",
                             productDateAdded = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
@@ -303,6 +383,29 @@ namespace LinkUp_Web.Migrations
                             productTitle = "Admin2Product",
                             supplierPrice = 80.0
                         });
+                });
+
+            modelBuilder.Entity("LinkUp_Web.Models.TempBookedProduct", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("applicationUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("bookingHeaderId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("productId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TempBookedProducts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -552,13 +655,13 @@ namespace LinkUp_Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5d1da9d8-2da1-429d-9d35-cca0aa0e2fd7",
+                            Id = "18db1f36-c3f1-407c-95f5-2e2dc9051016",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6111036b-9456-464f-99fc-2b627ff71f54",
+                            ConcurrencyStamp = "00910a9f-3f58-4ec5-9ca9-dbedafbacb43",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4d0b2487-df4f-4f43-96bb-328c4a1885c7",
+                            SecurityStamp = "9b18e755-4326-4bd1-91d5-6456fab4de96",
                             TwoFactorEnabled = false,
                             city = "AdminCity",
                             gender = "Male",
@@ -571,13 +674,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "c2da4801-f37d-4b83-aa59-a9892d6f1c0c",
+                            Id = "4be7d3cf-5ae3-436d-ac9e-855ecd0f3a08",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "516c3308-179e-476c-b91e-35a33ffc09e3",
+                            ConcurrencyStamp = "1b5c8ce3-6a03-4325-a835-35e17929eb30",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "51764bef-49a8-44ff-90b7-28e6a883ef27",
+                            SecurityStamp = "0f0be579-d61f-46d3-a6d5-7fa3529e6b18",
                             TwoFactorEnabled = false,
                             city = "Admin1City",
                             gender = "Male",
@@ -590,13 +693,13 @@ namespace LinkUp_Web.Migrations
                         },
                         new
                         {
-                            Id = "7e4c66c2-bd07-4549-8b44-3736a92ee996",
+                            Id = "863cd311-83e3-4b4c-a516-6f53af5ef837",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "754b743c-3677-4645-ae9f-259aac18fead",
+                            ConcurrencyStamp = "bfdc48cd-c1c0-4214-bb3d-dfa7f81d01c5",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b7c5cfe8-4c88-4ecc-aea5-68642d10fd08",
+                            SecurityStamp = "6ecd0807-f488-4057-a756-05392edc8c4f",
                             TwoFactorEnabled = false,
                             city = "Admin2City",
                             gender = "Male",
@@ -607,6 +710,17 @@ namespace LinkUp_Web.Migrations
                             streetAddress = "Admin2Home",
                             userDateJoined = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
                         });
+                });
+
+            modelBuilder.Entity("LinkUp_Web.Models.BookedProduct", b =>
+                {
+                    b.HasOne("LinkUp_Web.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("LinkUp_Web.Models.Booking", b =>
@@ -633,6 +747,23 @@ namespace LinkUp_Web.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("applicationUser");
+                });
+
+            modelBuilder.Entity("LinkUp_Web.Models.FulfilledBooking", b =>
+                {
+                    b.HasOne("LinkUp_Web.Models.BookingHeader", "BookingHeader")
+                        .WithMany()
+                        .HasForeignKey("BookingHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LinkUp_Web.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("BookingHeader");
                 });
 
             modelBuilder.Entity("LinkUp_Web.Models.Product", b =>

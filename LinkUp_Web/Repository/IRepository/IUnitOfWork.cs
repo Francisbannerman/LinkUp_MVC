@@ -10,5 +10,9 @@ public interface IUnitOfWork
     IBookingHeaderRepository BookingHeader { get; }
     IGratisPointRepository GratisPointPackages { get; }
     IGratisPurchaseRepository GratisPurchase { get; }
+    INotificationRepository Notification { get; }
+    IBookedProductRepository BookedProduct { get; }
+    IFulfilledBookingRepository FulfilledBooking { get; }
+    ITempBookedProductRepository TempBookedProduct { get; }
     void Save();
 }

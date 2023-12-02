@@ -1,7 +1,5 @@
 using LinkUp_Web.Models;
 using LinkUp_Web.Repository.IRepository;
-using LinkUp_Web.Utility;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinkUp_Web.Controllers;
@@ -50,9 +48,9 @@ public class CategoryController : Controller
         return View();
     }
 
-    public IActionResult Edit(int? id)
+    public IActionResult Edit(Guid? id)
     {
-        if (id == null || id == 0)
+        if (id == null)
         {
             return NotFound();
         }
@@ -77,9 +75,9 @@ public class CategoryController : Controller
         return View();
     }
 
-    public IActionResult Delete(int? id)
+    public IActionResult Delete(Guid? id)
     {
-        if (id == null || id == 0)
+        if (id == null)
         {
             return NotFound();
         }
@@ -93,7 +91,7 @@ public class CategoryController : Controller
     }
 
     [HttpPost, ActionName("Delete")]
-    public IActionResult DeletePost(int? id)
+    public IActionResult DeletePost(Guid? id)
     {
         Category? obj = _unitOfWork.Category.Get(u => u.categoryId == id);
 

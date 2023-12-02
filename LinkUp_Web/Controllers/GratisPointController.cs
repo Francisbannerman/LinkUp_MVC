@@ -1,7 +1,7 @@
-using System.Security.Claims;
 using LinkUp_Web.Models;
-using LinkUp_Web.Models.ViewModels;
 using LinkUp_Web.Repository.IRepository;
+using LinkUp_Web.Services;
+using LinkUp_Web.Services.IServices;
 using LinkUp_Web.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +14,22 @@ namespace LinkUp_Web.Controllers;
 public class GratisPointController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly NotificationService _notificationService;
+    private readonly IPaymentServices _paymentService;
+    private readonly GetUserIdService _getUserIdService;
 
-    public GratisPointController(IUnitOfWork unitOfWork)
+    public GratisPointController(IUnitOfWork unitOfWork, NotificationService notificationService, 
+        IPaymentServices paymentService, GetUserIdService getUserIdService)
     {
         _unitOfWork = unitOfWork;
+        _notificationService = notificationService;
+        _paymentService = paymentService;
+        _getUserIdService = getUserIdService;
     }
-    // GET
+    // GE
     public IActionResult Index()
     {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-        var applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+        var applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == _getUserIdService.GetCurrentUserId());
         
         return View(applicationUser);
     }
@@ -37,7 +41,7 @@ public class GratisPointController : Controller
         return View(gratisPackages);
     }
 
-    public IActionResult Summary(int? id)
+    public IActionResult Summary(Guid? id)
     {
         GratisPointPackages? gratisPointPackagesFromDb =
             _unitOfWork.GratisPointPackages.Get(u => u.gratisPointPackagesId == id);
@@ -47,85 +51,46 @@ public class GratisPointController : Controller
     
     [HttpPost]
      [ActionName("Summary")]
-     public IActionResult SummaryPOST(int id)
+     public IActionResult SummaryPOST(Guid id)
      {
-         var gratisPurchaseId = 0;
-         var claimsIdentity = (ClaimsIdentity)User.Identity;
-         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
          var gratisPointPackages = _unitOfWork.GratisPointPackages.Get(u => u.gratisPointPackagesId == id);
-
-         if (_unitOfWork.GratisPurchase.Count() == 0)
-         {
-             gratisPurchaseId = 1;
-         }
-         else
-         {
-             gratisPurchaseId = _unitOfWork.GratisPurchase.Max(u => u.gratisPurchaseId) + 1;
-         }
 
          var gratisPurchase = new GratisPurchase
          {
-             gratisPurchaseId = gratisPurchaseId,
+             gratisPurchaseId = Guid.NewGuid(),
              gratisPointQuantity = gratisPointPackages.gratisPointQuantity,
              amountForGratisPoint = gratisPointPackages.AmountForGratisPoint,
              datePurchased = DateTimeOffset.UtcNow,
              paymentStatus = SD.PaymentStatusPending,
-             applicationUser = userId
+             applicationUser = _getUserIdService.GetCurrentUserId()
          };
          _unitOfWork.GratisPurchase.Add(gratisPurchase);
          _unitOfWork.Save();
-
-         var domain = "https://localhost:7010/";
-         var successURL = $"{domain}GratisPoint/OrderConfirmation?id={gratisPurchaseId}";
-         var cancelURL = $"{domain}GratisPoint/index";
-         var options = new SessionCreateOptions
-         {
-             SuccessUrl = successURL,
-             CancelUrl = cancelURL,
-             LineItems = new List<SessionLineItemOptions>(),
-             Mode = "payment",
-         };
-         var sessionLineItem = new SessionLineItemOptions
-         {
-             PriceData = new SessionLineItemPriceDataOptions
-             {
-                 UnitAmount = (long)(gratisPointPackages.AmountForGratisPoint * 100),
-                 Currency = "usd",
-                 ProductData = new SessionLineItemPriceDataProductDataOptions
-                 {
-                     Name = gratisPointPackages.gratisPointQuantity.ToString()
-                 }
-             },
-             Quantity = 1
-         };
-         options.LineItems.Add(sessionLineItem);
          
-         var service = new SessionService();
-         Session session = service.Create(options);
-         _unitOfWork.GratisPurchase.UpdateStripePaymentID(gratisPurchaseId, session.Id, session.PaymentIntentId);
-         _unitOfWork.Save();
+         var sessionUrl = _paymentService.stripePayment(gratisPointPackages, gratisPurchase);
     
-         Response.Headers.Add("Location", session.Url);
+         Response.Headers.Add("Location", sessionUrl);
          return new StatusCodeResult(303);
      }
     
-    public IActionResult OrderConfirmation(int id)
+    public IActionResult OrderConfirmation(Guid id)
     {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-        
         GratisPurchase gratisPurchase = _unitOfWork.GratisPurchase.Get(u => u.gratisPurchaseId == id);
         
-         var service = new SessionService();
+        var newBalance = _unitOfWork.ApplicationUser.Get(u => u.Id == _getUserIdService.GetCurrentUserId()).gratisPoint +
+                         gratisPurchase.gratisPointQuantity;
+        var msg = $"Your Account Has Been Credited with {gratisPurchase.gratisPointQuantity} " 
+                  + $"Gratis Points. Your New Gratis Point Account Balance is {newBalance} ";
+        
+        var service = new SessionService();
          Session session = service.Get(gratisPurchase.sessionId);
         
          if (session.PaymentStatus.ToLower() == "paid")
          {
              _unitOfWork.GratisPurchase.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
              _unitOfWork.GratisPurchase.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-             _unitOfWork.ApplicationUser.BuyGratisPoints(userId,gratisPurchase.gratisPointQuantity);
-             
+             _unitOfWork.ApplicationUser.BuyGratisPoints(_getUserIdService.GetCurrentUserId(),gratisPurchase.gratisPointQuantity);
+             _notificationService.AddNotification(msg,_getUserIdService.GetCurrentUserId());
              _unitOfWork.Save();
          }
          _unitOfWork.Save();

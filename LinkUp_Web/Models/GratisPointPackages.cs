@@ -8,7 +8,7 @@ public class GratisPointPackages
 {
     [Key]
     [Required]
-    public int gratisPointPackagesId { get; set; }
+    public Guid gratisPointPackagesId { get; set; }
     [Required]
     public int gratisPointQuantity { get; set; }
     [Required]

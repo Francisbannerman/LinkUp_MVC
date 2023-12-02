@@ -34,6 +34,7 @@
       <_ContentIncludedByDefault Remove="Views\Company\Delete.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Company\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Company\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Notification\Index.cshtml" />
     </ItemGroup>
 
     <ItemGroup>

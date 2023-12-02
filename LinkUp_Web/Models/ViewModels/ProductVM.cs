@@ -10,4 +10,8 @@ public class ProductVM
     public IEnumerable<SelectListItem> CategoryList { get; set; }
     [ValidateNever]
     public IEnumerable<SelectListItem> CompanyList { get; set; }
+    [ValidateNever]
+    public List<BookedProduct> BookedProductList { get; set; }
+    [ValidateNever]
+    public List<Product> ProductList { get; set; }
 }

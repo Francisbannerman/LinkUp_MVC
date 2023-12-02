@@ -20,7 +20,6 @@ public class ApplicationUser : IdentityUser
     public string? referralCode { get; set; }
     public string? referredCode { get; set; }
     public int referredUsers { get; set; }
-
     public ApplicationUser()
     {
         gratisPoint = 0;
